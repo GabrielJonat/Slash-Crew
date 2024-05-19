@@ -1,14 +1,96 @@
-class Fighter {
+class Sprite {
 
-    constructor({position, velocity}, attackWidth, attackHeight){
+    constructor({position, imgSrc, scale = 1, framesMax = 1, offset = {x: 0, y: 0}}){
 
         this.position = position
-
-        this.velocity = velocity
 
         this.height = 150
 
         this.width = 50
+
+        this.img = new Image()
+
+        this.img.src = imgSrc
+
+        this.scale = scale
+
+        this.framesMax = framesMax
+
+        this.framesCurrent = 0
+
+        this.framesElapsed = 0
+
+        this.framesHold = 7
+
+        this.offset = offset
+    
+    }
+
+    draw(){
+
+        c.drawImage(this.img, this.framesCurrent * (this.img.width / this.framesMax) , 0, this.img.width / this.framesMax, this.img.height, this.position.x - this.offset.x , this.position.y - this.offset.y ,  (this.img.width / this.framesMax) * this.scale, this.img.height  * this.scale)
+        
+
+    }
+
+    animateFrames(){
+
+        this.framesElapsed++
+                
+                if(this.framesElapsed % this.framesHold === 0){
+        
+                    if(this.framesCurrent < this.framesMax - 1)
+
+                        this.framesCurrent ++ 
+                
+                    else
+                
+                        this.framesCurrent = 0
+
+                }
+
+    }
+
+        update(){
+       
+                this.animateFrames()
+
+                this.draw()
+                
+                this.framesElapsed++
+                
+                if(this.framesElapsed % this.framesHold === 0){
+        
+                    if(this.framesCurrent < this.framesMax - 1)
+
+                        this.framesCurrent ++ 
+                
+                    else
+                
+                        this.framesCurrent = 0
+
+                }            
+            }
+    }
+
+
+class Fighter extends Sprite{
+
+    constructor({position, velocity, imgSrc, scale = 1, framesMax = 1, offset = {x: 0, y: 0}, sprites}, attackWidth, attackHeight){
+
+        super({
+            position,
+            imgSrc,
+            scale,
+            framesMax,
+            offset
+        })
+
+        this.velocity = velocity
+
+        this.height = 100
+
+        this.width = 70
 
         this.isAttacking = false
 
@@ -23,40 +105,31 @@ class Fighter {
             height: attackHeight
 
         }
-    }
 
-    draw(enemy){
 
-        if (enemy)
-        
-            c.fillStyle = 'purple'
-        
-        else
-        
-            c.fillStyle = 'green'
+        this.framesCurrent = 0
 
-        c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        this.framesElapsed = 0
 
-        
-        if(this.isAttacking){
-        
-                c.fillStyle = 'cyan'
-        
-                c.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width, this.attackBox.height)
+        this.framesHold = 7
+
+        this.sprites = sprites
+
+        for (const sprite in this.sprites){
+
+            sprites[sprite].img = new Image()
+            sprites[sprite].img.src = sprites[sprite].imgSrc
+            this.framesCurrent = 0
 
         }
-
     }
 
-        update(enemy){
 
-            if (enemy)
+        update(){
 
-                this.draw(true)
+            this.draw()
 
-            else
-
-                this.draw()
+            this.animateFrames()
 
             this.position.y += this.velocity.y
 
@@ -82,82 +155,6 @@ class Fighter {
         
             }, 150)
         
-        }
-
-
-}
-
-class Sprite {
-
-    constructor({position, imgSrc, scale = 1, framesMax = 1}){
-
-        this.position = position
-
-        this.height = 150
-
-        this.width = 50
-
-        this.img = new Image()
-
-        this.img.src = imgSrc
-
-        this.scale = scale
-
-        this.framesMax = framesMax
-
-        this.framesCurrent = 0
-
-        this.framesElapsed = 0
-
-        this.framesHold = 7
-    
-    }
-
-    draw(enemy){
-
-        c.drawImage(this.img, this.framesCurrent * (this.img.width / this.framesMax) , 0, this.img.width / this.framesMax, this.img.height, this.position.x, this.position.y,  (this.img.width / this.framesMax) * this.scale, this.img.height  * this.scale)
-    
-    }
-
-        update(enemy){
-
-            if (enemy){
-
-                this.draw(true)
-                
-                this.framesElapsed++
-                
-                if(this.framesElapsed % this.framesHold === 0){
-        
-                    if(this.framesCurrent < this.framesMax - 1)
-
-                        this.framesCurrent ++ 
-                
-                    else
-                
-                        this.framesCurrent = 0
-
-                }
-        }
-            
-            else{
-
-                this.draw()
-                
-                this.framesElapsed++
-                
-                if(this.framesElapsed % this.framesHold === 0){
-        
-                    if(this.framesCurrent < this.framesMax - 1)
-
-                        this.framesCurrent ++ 
-                
-                    else
-                
-                        this.framesCurrent = 0
-
-                }            
-            }
         }
 
 

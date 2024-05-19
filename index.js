@@ -35,15 +35,79 @@ const player = new Fighter({
 
     velocity: {x: 0, y: 10},
 
+    imgSrc: './images/Kelev.png',
+
+    scale: 1.8,
+
+    framesMax: 8,
+
+    offset: {x: 120, y: 58},
+
+    sprites: {
+
+        idle: {
+            
+            imgSrc: './images/Kelev.png',
+            framesMax: 8,
+            scale: 2.6
+        },
+
+        toTheRight: {
+            
+            imgSrc: './images/mikey_right_run.png',
+            framesMax: 3,
+            scale: 4
+        },
+
+        toTheLeft: {
+            
+            imgSrc: './images/mikey_left_run.png',
+            framesMax: 3,
+            scale: 4
+        }
+    }
+
 }, 120, 100)
 
 const enemy = new Fighter({
 
-    position: { x: 400, y: 100},
+    position: { x: 921, y: 100},
 
     velocity: {x: 0, y: 10},
 
-}, - 314.15 , 18)
+    imgSrc: './images/Mikey.png',
+
+    scale: 2.6,
+
+    framesMax: 8,
+
+    offset: {x: 217, y: 90},
+
+    sprites: {
+
+        idle: {
+            
+            imgSrc: './images/Mikey.png',
+            framesMax: 8,
+            scale: 2.6
+        },
+
+        toTheRight: {
+            
+            imgSrc: './images/mikey_right_run.png',
+            framesMax: 3,
+            scale: 4
+        },
+
+        toTheLeft: {
+            
+            imgSrc: './images/mikey_left_run.png',
+            framesMax: 3,
+            scale: 4
+        }
+    }
+    
+}, -700 , 18)
 
 const keys = {
 
@@ -120,6 +184,7 @@ function getWinner(player, enemy, timerId){
 }
 
 let timerId
+upon = false
 
 let timer = document.querySelector('#timer').innerHTML
 
@@ -163,12 +228,23 @@ function defAnimation(){
 
     player.velocity.x = 0
 
+    player.img = player.sprites.idle.img
+
+    enemy.framesMax = 8
+
+    enemy.scale = 2.6
+
+    enemy.offset = {x: 217, y: 90}
+
+    enemy.img = enemy.sprites.idle.img
+
     if (keys.a.pressed && lastPlayerKey === 'a' && player.position.x >= 10 &&
      (player.position.x >= enemy.position.x + enemy.width + 10 ||
       player.position.x < enemy.position.x || player.position.y + player.height < enemy.position.y
      )){
 
         player.velocity.x = -10
+
     }
 
     else{
@@ -178,10 +254,11 @@ function defAnimation(){
          ){
 
             player.velocity.x = 10
+        
         }
     }
 
-    if (keys.w.pressed && player.velocity.y ===0 || (upon && keys.w.pressed) ){
+    if (keys.w.pressed && player.velocity.y == 0 || keys.w.pressed && upon){
 
         player.velocity.y = -19
 
@@ -195,6 +272,19 @@ function defAnimation(){
     ){
     
         enemy.velocity.x = -10
+
+        enemy.img = enemy.sprites.toTheLeft.img
+
+        enemy.framesMax = 3
+
+        enemy.scale = 3.2
+
+        enemy.offset = {
+            x: 285,
+            y: 130
+        }
+
+
     }
     
     else{ 
@@ -204,43 +294,71 @@ function defAnimation(){
            enemy.position.x >= player.position.x + player.width || enemy.position.y + enemy.height < player.position.y)){
     
         enemy.velocity.x = 10
+        
+        enemy.img = enemy.sprites.toTheRight.img
+
+        enemy.framesMax = 3
+
+        enemy.scale = 3.2
+
+        enemy.offset = {
+            x: 285,
+            y: 130
+        }
+
     }
 }
 
-    if (keys.ArrowUp.pressed && enemy.velocity.y === 0 || (upon && keys.ArrowUp.pressed)){
+    if (keys.ArrowUp.pressed && enemy.velocity.y === 0 || keys.ArrowUp.pressed && upon ){
 
         enemy.velocity.y = -19
 
     }
 
-    if (player.position.y + player.height <= enemy.position.y  && 
-        player.position.y + player.height >= enemy.position.y - 8 && 
-        (player.position.x + player.width >= enemy.position.x &&
+    if (player.position.y + player.height <= enemy.position.y &&
+        player.position.y + player.height >= enemy.position.y - 49 &&  
+        (player.position.x + player.width > enemy.position.x &&
         player.position.x + player.width <= enemy.position.x + enemy.width ||
          player.position.x <= enemy.position.x + enemy.width &&
-        player.position.x >= enemy.position.x + 12)){
+        player.position.x >= enemy.position.x)){
         
+
             player.velocity.y = 0
 
             upon = true
 
+
         }
 
-    else if (enemy.position.y + enemy.height <= player.position.y  && 
-        enemy.position.y + enemy.height >= player.position.y - 8 && 
-        (enemy.position.x + enemy.width >= player.position.x &&
+    if (enemy.position.y + enemy.height <= player.position.y &&
+        enemy.position.y + enemy.height >= player.position.y - 49 &&  
+        (enemy.position.x + enemy.width > player.position.x &&
         enemy.position.x + enemy.width <= player.position.x + player.width ||
          enemy.position.x <= player.position.x + player.width &&
-        enemy.position.x >= player.position.x + 12)){
+        enemy.position.x >= player.position.x)){
 
             enemy.velocity.y = 0
 
             upon = true
 
-        }
-        else
+          }
+
+    if(!(player.position.y + player.height <= enemy.position.y &&
+        player.position.y + player.height >= enemy.position.y - 49 &&  
+        (player.position.x + player.width > enemy.position.x &&
+        player.position.x + player.width <= enemy.position.x + enemy.width ||
+         player.position.x <= enemy.position.x + enemy.width &&
+        player.position.x >= enemy.position.x)) && ! (enemy.position.y + enemy.height <= player.position.y &&
+            enemy.position.y + enemy.height >= player.position.y - 49 &&  
+            (enemy.position.x + enemy.width > player.position.x &&
+            enemy.position.x + enemy.width <= player.position.x + player.width ||
+             enemy.position.x <= player.position.x + player.width &&
+            enemy.position.x >= player.position.x)))
+        {
         
             upon = false
+        
+        }
 
     if (keys.e.pressed)
 
@@ -284,7 +402,7 @@ function defAnimation(){
     
         if (enemy.position.x >= player.position.x + player.width){
 
-            enemy.attackBox.width = -314.15
+            enemy.attackBox.width = -161.8
             
             if (enemy.position.x + enemy.attackBox.width <= player.position.x + player.width && 
                 enemy.isAttacking){
@@ -300,9 +418,9 @@ function defAnimation(){
 
     else{
         
-           enemy.attackBox.width = 314.15
+           enemy.attackBox.width = 161.8
     
-            if(enemy.position.x + 314.15 >= player.position.x &&
+            if(enemy.position.x + 161.8 >= player.position.x &&
                enemy.isAttacking){
 
                 player.health -= 0.62
