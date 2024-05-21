@@ -30,6 +30,7 @@ class Sprite {
 
         c.drawImage(this.img, this.framesCurrent * (this.img.width / this.framesMax) , 0, this.img.width / this.framesMax, this.img.height, this.position.x - this.offset.x , this.position.y - this.offset.y ,  (this.img.width / this.framesMax) * this.scale, this.img.height  * this.scale)
         
+        //c.fillRect(this.position.x, this.position.y, this.width, this.height)
 
     }
 
@@ -153,7 +154,7 @@ class Fighter extends Sprite{
         
                 this.isAttacking = false
         
-            }, 150)
+            }, 100)
         
         }
 

@@ -65,6 +65,7 @@ const player = new Fighter({
             framesMax: 3,
             scale: 4
         }
+
     }
 
 }, 120, 100)
@@ -104,6 +105,20 @@ const enemy = new Fighter({
             imgSrc: './images/mikey_left_run.png',
             framesMax: 3,
             scale: 4
+        },
+
+        thrust: {
+
+            imgSrc: './images/Mikey-Attack.png',
+            framesMax: 4,
+            scale: 2.1
+        },
+
+        reverseThrust: {
+
+            imgSrc: './images/Mikey-Attack-Reverse.png',
+            framesMax: 4,
+            scale: 2.1
         }
     }
     
@@ -364,9 +379,29 @@ function defAnimation(){
 
         player.attack()
 
-    if (keys.n.pressed)
-
+    if (keys.n.pressed && keys.ArrowLeft.pressed == false && keys.ArrowRight.pressed == false && enemy.velocity.y == 0 )
+{       
         enemy.attack()
+    
+        if (enemy.attackBox.width < 0)
+
+            enemy.img = enemy.sprites.thrust.img
+        
+        else
+
+            enemy.img = enemy.sprites.reverseThrust.img
+        
+        
+
+        enemy.framesMax = enemy.sprites.thrust.framesMax
+        
+        enemy.scale = enemy.sprites.thrust.scale
+
+        enemy.offset = {x:190, y: 57}
+
+
+    }
+
 
     if (player.position.x  >= enemy.position.x + enemy.width ){
 
@@ -375,7 +410,7 @@ function defAnimation(){
             if (player.position.x + player.attackBox.width <= enemy.position.x && 
                 player.isAttacking){
         
-                enemy.health -= 0.62    
+                enemy.health -= 0.5  
         
                 document.querySelector('#enemy-health').style.width = enemy.health + '%'
         
@@ -392,7 +427,7 @@ function defAnimation(){
                 player.isAttacking
             ){
 
-                enemy.health -= 0.62    
+                enemy.health -= 0.5    
         
                 document.querySelector('#enemy-health').style.width = enemy.health + '%'
 
@@ -407,7 +442,7 @@ function defAnimation(){
             if (enemy.position.x + enemy.attackBox.width <= player.position.x + player.width && 
                 enemy.isAttacking){
      
-                player.health -= 0.62
+                player.health -= 0.3
      
                 document.querySelector('#player-health').style.width = player.health + '%'
      
@@ -423,7 +458,7 @@ function defAnimation(){
             if(enemy.position.x + 161.8 >= player.position.x &&
                enemy.isAttacking){
 
-                player.health -= 0.62
+                player.health -= 0.3
 
                 document.querySelector('#player-health').style.width = player.health + '%'
 
@@ -448,6 +483,7 @@ function defAnimation(){
 
         player.position.y = canvas.height - 96 - player.height
     
+        console.log(enemy.isAttacking)
     }
 
 defAnimation()
@@ -556,7 +592,11 @@ window.addEventListener('keydown',(event) => {
 
         case 'n':
 
-            keys.n.pressed = true
+            setTimeout(() => {
+            
+                keys.n.pressed = !keys.n.pressed
+
+            }, 300)
 
             break
 
@@ -586,15 +626,6 @@ window.addEventListener('keyup',(event) => {
             keys.ArrowUp.pressed = false
             
             break
-
-        case 'n':
-
-            keys.n.pressed = false
-            
-            break
-    
-
-
     }
 
    
