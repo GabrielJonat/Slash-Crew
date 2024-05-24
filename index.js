@@ -562,8 +562,16 @@ window.addEventListener('keyup',(event) => {
 
 }) 
 
+var allowed = true
+
 window.addEventListener('keydown',(event) => {
    
+    if (event.repeat != undefined) {
+        allowed = !event.repeat;
+      }
+      if (!allowed) return;
+      allowed = false;
+
     switch(event.key){
 
         case 'ArrowRight':
@@ -592,6 +600,7 @@ window.addEventListener('keydown',(event) => {
 
         case 'n':
 
+
             setTimeout(() => {
             
                 keys.n.pressed = !keys.n.pressed
@@ -605,7 +614,9 @@ window.addEventListener('keydown',(event) => {
 }) 
 
 window.addEventListener('keyup',(event) => {
-   
+
+    allowed = true;
+
     switch(event.key){
 
         case 'ArrowRight':
@@ -630,3 +641,7 @@ window.addEventListener('keyup',(event) => {
 
    
 }) 
+
+window.addEventListener('focus', function(e){
+    allowed = true;
+})
