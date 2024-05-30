@@ -66,6 +66,14 @@ const player = new Fighter({
             scale: 4
         },
 
+        jump: {
+
+            imgSrc: './images/Kelev_jump.png',
+            framesMax: 12,
+            scale: 1.3
+
+        },
+
         right_attack: {
 
             imgSrc: './images/Kelev-Attack.png',
@@ -310,7 +318,8 @@ function defAnimation(){
 
     if (keys.w.pressed && player.velocity.y == 0 || keys.w.pressed && upon){
 
-        player.velocity.y = -25
+        setTimeout(function(){player.velocity.y = -23}, 150)
+
 
     }
 
@@ -374,6 +383,18 @@ function defAnimation(){
         enemy.scale = 1.8
     
         enemy.offset = {x: 150, y: 50}
+    }
+
+    if(player.position.y + player.height < canvas.height - 100 && player.velocity.y != 0 && !upon){
+
+        player.img = player.sprites.jump.img
+
+        player.framesMax = 13   
+
+        player.scale = 1.8
+    
+        player.offset = {x: 150, y: 50}
+
     }
 
     if (player.position.y + player.height <= enemy.position.y &&
