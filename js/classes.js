@@ -95,6 +95,8 @@ class Fighter extends Sprite{
 
         this.isAttacking = false
 
+        this.isDead = false
+
         this.health = 100
 
         this.attackBox = {
@@ -156,6 +158,11 @@ class Fighter extends Sprite{
         
             }, 100)
         
+        }
+
+        die(){
+
+            this.isDead = true
         }
 
 

@@ -86,6 +86,14 @@ const player = new Fighter({
             imgSrc: './images/Kelev-Attack-Reverse.png',
             framesMax: 5,
             scale: 1.3
+        },
+
+        dead: {
+
+            imgSrc: './images/Kelev_defeat.png',
+            framesMax: 1,
+            scale: 1.3
+
         }
 
     }
@@ -156,6 +164,14 @@ const enemy = new Fighter({
             framesMax: 6,
             scale: 2
 
+        },
+
+        dead: {
+
+            imgSrc: './images/Mikey_defeat.png',
+            framesMax: 1,
+            scale: 2
+
         }
     }
     
@@ -224,14 +240,42 @@ function getWinner(player, enemy, timerId){
         
         document.querySelector('#outcome').innerHTML = 'Tie'
 
-    else if(player.health > enemy.health)
+    else if(player.health > enemy.health){
 
-        document.querySelector('#outcome').innerHTML = 'Player 1 Wins'
+        document.querySelector('#outcome').innerHTML = 'Kelev Wins'
+        
+        enemy.img = enemy.sprites.dead.img
 
-    else
+        enemy.framesMax = 1
 
-        document.querySelector('#outcome').innerHTML = 'Player 2 Wins'
+        enemy.die()
 
+        enemy.isAttacking = false
+
+        enemy.offset.y = 70
+    }
+
+    else{
+
+        document.querySelector('#outcome').innerHTML = 'Michael The Duck Wins'
+    
+        player.img = player.sprites.dead.img
+
+        player.framesMax = 1
+
+        player.offset.x = 160
+
+        player.offset.y = 60
+
+        player.scale = 2
+        
+        player.die()
+
+        player.height = 60
+
+        player.isAttacking = false
+
+    }
 
 }
 
@@ -597,33 +641,45 @@ window.addEventListener('keydown',(event) => {
 
         case 'd':
 
-            keys.d.pressed = true
-            
-            lastPlayerKey = 'd'
+            if (! player.isDead){
 
+                keys.d.pressed = true
+                
+                lastPlayerKey = 'd'
+            
+        }
             break
 
         case 'a':
 
-            keys.a.pressed = true
-            
-            lastPlayerKey = 'a'
+            if (! player.isDead){
 
+                keys.a.pressed = true
+                
+                lastPlayerKey = 'a'
+            
+        }
             break
 
         case 'w':
 
-            keys.w.pressed = true
+            if (! player.isDead){
+
+                keys.w.pressed = true
+            }
 
             break
 
         case 'e':
 
-            setTimeout(() => {
-                
-                keys.e.pressed = !keys.e.pressed
-                
-            }, 150)
+            if (! player.isDead){
+
+                setTimeout(() => {
+                    
+                    keys.e.pressed = !keys.e.pressed
+                    
+                }, 150)
+            }
         
                 break
         
@@ -674,37 +730,51 @@ window.addEventListener('keydown',(event) => {
 
         case 'ArrowRight':
 
-            keys.ArrowRight.pressed = true
+            if(! enemy.isDead){
             
-            lastEnemyKey = 'ArrowRight'
+                keys.ArrowRight.pressed = true
+                
+                lastEnemyKey = 'ArrowRight'
+            
+            }
 
             break
 
         case 'ArrowLeft':
 
+        if(! enemy.isDead){
+            
             keys.ArrowLeft.pressed = true
             
             lastEnemyKey = 'ArrowLeft'
+        }
 
             break
 
             
         case 'ArrowUp':
 
-            keys.ArrowUp.pressed = true
+            if(! enemy.isDead){
+            
+                keys.ArrowUp.pressed = true
+
+            }
 
             break
 
 
         case 'n':
 
-
-            setTimeout(() => {
+            if(! enemy.isDead){
+            
+                setTimeout(() => {
             
                 keys.n.pressed = !keys.n.pressed
 
             }, 300)
-
+        
+        }
+    
             break
 
     }
