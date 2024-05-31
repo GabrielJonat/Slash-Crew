@@ -10,6 +10,8 @@ c.fillRect(0, 0, canvas.width, canvas.height)
 
 const gravity = 0.98
 
+
+
 let lastPlayerKey, lastEnemyKey, upon = false
 
 const background = new Sprite({
@@ -91,6 +93,23 @@ const player = new Fighter({
         dead: {
 
             imgSrc: './images/Kelev_defeat.png',
+            framesMax: 1,
+            scale: 1.3
+
+        },
+
+        dash: {
+
+            imgSrc: './images/Kelev_Dash.png',
+            framesMax: 1,
+            scale: 1.3
+
+
+        },
+
+        reverse_dash: {
+
+            imgSrc: './images/Kelev_Dash - Reverse.png',
             framesMax: 1,
             scale: 1.3
 
@@ -221,8 +240,26 @@ const keys = {
         pressed: false
 
    },
+   
+   c: {
+
+        pressed: false
+
+   },
+
+   v: {
+
+        pressed: false
+
+   },
 
    n: {
+
+        pressed: false
+
+   },
+
+   c: {
 
         pressed: false
 
@@ -281,6 +318,7 @@ function getWinner(player, enemy, timerId){
 
 let timerId
 upon = false
+let enemyPulo = false
 
 let timer = document.querySelector('#timer').innerHTML
 
@@ -321,6 +359,8 @@ function defAnimation(){
     player.update()
 
     enemy.update(true)
+
+    enemyPulo = false
 
     player.velocity.x = 0
 
@@ -413,6 +453,8 @@ function defAnimation(){
 }
 
     if (keys.ArrowUp.pressed && enemy.velocity.y === 0 || keys.ArrowUp.pressed && upon ){
+
+        enemyPulo = true
 
         enemy.velocity.y = -19
     
@@ -514,6 +556,79 @@ function defAnimation(){
 
     }
 
+    if(keys.v.pressed && lastPlayerKey === 'v' && player.velocity.y === 0 &&  player.position.x <= 970 &&
+    (player.position.x + player.width <= enemy.position.x - 30 || 
+    player.position.x >= enemy.position.x + enemy.width || player.position.y + player.height < enemy.position.y))
+    {
+
+
+        player.dash()
+
+        player.img = player.sprites.dash.img
+
+        player.framesMax = 8
+
+        player.scale = 1.4
+
+        player.offset = {x: 100, y: 30}
+
+        setTimeout(() => {
+
+            player.velocity.x = 30            
+
+
+        }, 10)
+
+        
+        setTimeout(() =>{
+                
+            keys.v.pressed = false
+            
+ 
+        }, 360)
+
+    }
+
+    if(keys.c.pressed && lastPlayerKey === 'c' && player.position.x >= 10 &&
+    (player.position.x >= enemy.position.x + enemy.width + 30 ||
+     player.position.x < enemy.position.x || player.position.y + player.height < enemy.position.y
+    ))
+    {
+
+
+        player.dash()
+
+        player.img = player.sprites.reverse_dash.img
+
+        player.framesMax = 8
+
+        player.scale = 1.4
+
+        player.offset = {x: 100, y: 30}
+
+        setTimeout(() => {
+
+            player.velocity.x = -30            
+
+
+        }, 10)
+
+        
+        setTimeout(() =>{
+                
+            keys.c.pressed = false
+            
+ 
+        }, 360)
+
+    }
+
+    if (enemyPulo && player.isDashing){
+
+        player.paralyze()
+
+    }
+
     if (keys.n.pressed && keys.ArrowLeft.pressed == false && keys.ArrowRight.pressed == false && enemy.velocity.y == 0 )
 {       
         enemy.attack()
@@ -542,11 +657,20 @@ function defAnimation(){
 
             player.attackBox.width = -120
         
-            if (player.position.x + player.attackBox.width <= enemy.position.x && 
-                player.isAttacking){
+            if (player.position.x + player.attackBox.width <= enemy.position.x ){
         
-                enemy.health -= 0.38 
-        
+                if(player.isAttacking){
+                
+                    enemy.health -= 0.38 
+                
+                }
+
+                else if(player.isDashing && enemy.velocity.y === 0){
+
+                    enemy.health -= 1.6
+
+                }
+
                 document.querySelector('#enemy-health').style.width = enemy.health + '%'
         
 
@@ -558,12 +682,21 @@ function defAnimation(){
 
             player.attackBox.width = 120
     
-            if (player.position.x + player.attackBox.width >= enemy.position.x &&
-                player.isAttacking
-            ){
+            if (player.position.x + player.attackBox.width >= enemy.position.x && enemy.position.y + enemy.height > player.position.y)
+            {
 
-                enemy.health -= 0.38    
-        
+                if(player.isAttacking){
+            
+                    enemy.health -= 0.38    
+                
+            }
+
+                else if(player.isDashing && enemy.velocity.y === 0){
+
+                    enemy.health -= 1.6
+
+                }
+
                 document.querySelector('#enemy-health').style.width = enemy.health + '%'
 
             }
@@ -637,6 +770,8 @@ window.addEventListener('keydown',(event) => {
       if (!allowed) return;
       allowed = false;
 
+    if(!player.isParalyzed){
+
     switch(event.key){
 
         case 'd':
@@ -682,15 +817,39 @@ window.addEventListener('keydown',(event) => {
             }
         
                 break
-        
-    }
+
+        case 'v':
+
+                if(Math.abs((player.position.x + player.width) - enemy.position.x) >= 450  && lastPlayerKey != 'v' && !upon){
+            
+                    keys.v.pressed = true
+                
+                    lastPlayerKey = 'v'
+            
+            }
+            
+                break
+
+        case 'c':
+
+                if(Math.abs((player.position.x + player.width) - enemy.position.x) >= 450  && lastPlayerKey != 'c' && !upon){
+                    
+                    keys.c.pressed = true
+                
+                    lastPlayerKey = 'c'
+            
+            }
+            
+                break
+
+    }}
     
 }) 
 
 window.addEventListener('keyup',(event) => {
 
     allowed = true
-    
+
     switch(event.key){
 
         case 'd':
@@ -711,7 +870,6 @@ window.addEventListener('keyup',(event) => {
             keys.w.pressed = false
             
             break
-
         
     }
     
@@ -755,7 +913,7 @@ window.addEventListener('keydown',(event) => {
         case 'ArrowUp':
 
             if(! enemy.isDead){
-            
+
                 keys.ArrowUp.pressed = true
 
             }

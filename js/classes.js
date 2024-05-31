@@ -95,7 +95,11 @@ class Fighter extends Sprite{
 
         this.isAttacking = false
 
+        this.isDashing = false
+        
         this.isDead = false
+
+        this.isParalyzed = false
 
         this.health = 100
 
@@ -160,6 +164,31 @@ class Fighter extends Sprite{
         
         }
 
+        dash()
+        {
+
+            this.isDashing = true
+
+            setTimeout(() => {
+
+                this.isDashing = false
+
+            }, 500)
+
+
+        }
+
+        paralyze(){
+
+            this.isParalyzed = true
+
+            setTimeout(() =>{
+
+                this.isParalyzed = false
+
+            }, 1600)
+
+        }
         die(){
 
             this.isDead = true
