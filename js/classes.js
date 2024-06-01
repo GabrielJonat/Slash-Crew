@@ -186,7 +186,7 @@ class Fighter extends Sprite{
 
                 this.isParalyzed = false
 
-            }, 1600)
+            }, 1760)
 
         }
         die(){

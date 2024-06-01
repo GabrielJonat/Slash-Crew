@@ -56,14 +56,14 @@ const player = new Fighter({
 
         toTheRight: {
             
-            imgSrc: './images/mikey_right_run.png',
+            imgSrc: './images/Kelev_Run.png',
             framesMax: 3,
             scale: 4
         },
 
         toTheLeft: {
             
-            imgSrc: './images/mikey_left_run.png',
+            imgSrc: './images/Kelev_Run_Reverse.png',
             framesMax: 3,
             scale: 4
         },
@@ -110,6 +110,14 @@ const player = new Fighter({
         reverse_dash: {
 
             imgSrc: './images/Kelev_Dash - Reverse.png',
+            framesMax: 1,
+            scale: 1.3
+
+        },
+
+        paralyze: {
+
+            imgSrc: './images/Kelev_Dizzy.png',
             framesMax: 1,
             scale: 1.3
 
@@ -387,6 +395,14 @@ function defAnimation(){
 
         player.velocity.x = -10
 
+        player.img = player.sprites.toTheLeft.img
+
+        player.framesMax = 7
+
+        player.scale = 1.4
+
+        player.offset.y = 33
+  
     }
 
     else{
@@ -396,7 +412,16 @@ function defAnimation(){
          ){
 
             player.velocity.x = 10
+
+            player.img = player.sprites.toTheRight.img
+
+            player.framesMax = 7
         
+            player.scale = 1.4
+        
+            
+        player.offset.y = 33
+
         }
     }
 
@@ -626,6 +651,19 @@ function defAnimation(){
     if (enemyPulo && player.isDashing){
 
         player.paralyze()
+
+
+    }
+
+    if(player.isParalyzed){
+
+        player.img = player.sprites.paralyze.img
+
+        player.framesMax = 7
+
+        player.scale = 1.8
+
+        player.offset = {x: 120, y: 60}
 
     }
 
