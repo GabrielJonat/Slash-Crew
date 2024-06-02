@@ -465,6 +465,8 @@ function defAnimation(){
       player.position.x < enemy.position.x || player.position.y + player.height < enemy.position.y
      )){
 
+        keys.e.pressed = false
+
         player.velocity.x = -10
 
         player.img = player.sprites.toTheLeft.img
@@ -483,6 +485,8 @@ function defAnimation(){
             player.position.x >= enemy.position.x + enemy.width || player.position.y + player.height < enemy.position.y)
          ){
 
+            keys.e.pressed = false
+
             player.velocity.x = 10
 
             player.img = player.sprites.toTheRight.img
@@ -499,6 +503,8 @@ function defAnimation(){
 
     if (keys.w.pressed && player.velocity.y == 0 || keys.w.pressed && upon){
 
+        keys.e.pressed = false
+
         setTimeout(function(){player.velocity.y = -23}, 150)
 
 
@@ -511,6 +517,8 @@ function defAnimation(){
        enemy.position.x < player.position.x || enemy.position.y + enemy.height < player.position.y)
     ){
     
+        keys.n.pressed = false
+
         enemy.velocity.x = -10
 
         enemy.img = enemy.sprites.toTheLeft.img
@@ -533,6 +541,8 @@ function defAnimation(){
            (enemy.position.x + enemy.width <= player.position.x - 10 || 
            enemy.position.x >= player.position.x + player.width || enemy.position.y + enemy.height < player.position.y)){
     
+        keys.n.pressed = false
+
         enemy.velocity.x = 10
         
         enemy.img = enemy.sprites.toTheRight.img
@@ -551,10 +561,15 @@ function defAnimation(){
 
     if (keys.ArrowUp.pressed && enemy.velocity.y === 0 || keys.ArrowUp.pressed && upon ){
 
+        keys.n.pressed = false
+
         enemyPulo = true
 
         enemy.velocity.y = -19
-    
+
+        
+
+
     }
 
     if(enemy.position.y + enemy.height < canvas.height - 100 && enemy.velocity.y != 0 && !upon){
@@ -627,7 +642,7 @@ function defAnimation(){
 
         AttackRampage = false
 
-    if (keys.e.pressed && keys.a.pressed == false && keys.d.pressed == false && player.velocity.y == 0){
+    if (keys.e.pressed && keys.a.pressed == false && keys.d.pressed == false && player.velocity.y == 0 && AttackRampage == false){
 
         player.attack()
 
@@ -696,6 +711,7 @@ function defAnimation(){
     ))
     {
 
+        keys.e.pressed = false
 
         player.dash()
 
@@ -763,6 +779,7 @@ function defAnimation(){
 
     if (keys.n.pressed && keys.ArrowLeft.pressed == false && keys.ArrowRight.pressed == false && enemy.velocity.y == 0 )
 {       
+        
         attackMode = true
 
         enemy.attack()
@@ -998,6 +1015,8 @@ window.addEventListener('keydown',(event) => {
 
                 if(Math.abs((player.position.x + player.width) - enemy.position.x) >= 450  && lastPlayerKey != 'v' && !upon){
             
+                    keys.e.pressed = false
+
                     keys.v.pressed = true
                 
                     lastPlayerKey = 'v'
