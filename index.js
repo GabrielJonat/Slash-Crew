@@ -225,6 +225,14 @@ const enemy = new Fighter({
             framesMax: 1,
             scale: 2
 
+        },
+
+        shoot: {
+
+            imgSrc: './images/Mikey-Shoot.png',
+            framesMax: 1,
+            scale: 2
+
         }
     }
     
@@ -300,6 +308,12 @@ const keys = {
    },
 
    q: {
+
+        pressed: false
+
+   },
+
+   m: {
 
         pressed: false
 
@@ -400,6 +414,31 @@ function defAnimation(){
 
     enemy.update(true)
 
+    enemy.Projectiles.forEach((proj) => { 
+        
+        if(keys.m.pressed == false) 
+            
+            proj.update()
+        
+        if(proj.position.x >= player.position.x && proj.position.x <= player.position.x + player.width && proj.position.y < player.position.y + player.height ){
+        
+            enemy.Projectiles.pop(proj)
+            
+            if(! player.isDashing && ! player.isAttacking){
+            
+                player.health -= 1 
+
+                document.querySelector('#player-health').style.width = player.health + '%'
+           
+                
+        }
+
+            
+            enemy.Projectiles = []
+        }
+
+            })
+
     enemyPulo = false
 
     player.velocity.x = 0
@@ -419,6 +458,7 @@ function defAnimation(){
     player.scale = 1.8
 
     player.offset = {x: 120, y: 58}
+    
 
     if (keys.a.pressed && lastPlayerKey === 'a' && player.position.x >= 10 &&
      (player.position.x >= enemy.position.x + enemy.width + 10 ||
@@ -585,9 +625,13 @@ function defAnimation(){
         
         }
 
+        AttackRampage = false
+
     if (keys.e.pressed && keys.a.pressed == false && keys.d.pressed == false && player.velocity.y == 0){
 
         player.attack()
+
+        AttackRampage = true
 
         if (player.attackBox.width < 0){
 
@@ -687,6 +731,7 @@ function defAnimation(){
 
     }
 
+
     if(player.isParalyzed){
 
         player.img = player.sprites.paralyze.img
@@ -699,8 +744,27 @@ function defAnimation(){
 
     }
 
+    if(keys.m.pressed == true && lastEnemyKey == 'm'  && enemy.attackBox.width < 0 && enemy.position.y + enemy.height >= canvas.height - 100 && Math.abs(enemy.position.x - player.position.x) >= 375 && attackMode == false){
+
+        enemy.shoot()
+
+        enemy.img = enemy.sprites.shoot.img
+
+        enemy.framesMax = 4
+
+        enemy.offset.y = 55
+
+        enemy.scale = 2.09
+
+        setTimeout(() => {console.log()}, 800)
+    }
+
+    attackMode = false
+
     if (keys.n.pressed && keys.ArrowLeft.pressed == false && keys.ArrowRight.pressed == false && enemy.velocity.y == 0 )
 {       
+        attackMode = true
+
         enemy.attack()
     
         if (enemy.attackBox.width < 0)
@@ -722,7 +786,7 @@ function defAnimation(){
 
     }
 
-    if(keys.q.pressed && lastPlayerKey == 'q'){
+    if(keys.q.pressed && lastPlayerKey == 'q' && !AttackRampage){
 
         player.isDefending = true
 
@@ -996,6 +1060,7 @@ window.addEventListener('keyup',(event) => {
     
 }) 
 
+var shooting = true
 
 window.addEventListener('keydown',(event) => {
    
@@ -1004,6 +1069,7 @@ window.addEventListener('keydown',(event) => {
       }
       if (!allowed) return;
       allowed = false;
+
 
     switch(event.key){
 
@@ -1050,12 +1116,28 @@ window.addEventListener('keydown',(event) => {
             
                 keys.n.pressed = !keys.n.pressed
 
+
             }, 300)
         
         }
     
             break
 
+        case 'm':
+
+            if(shooting){
+           
+                setTimeout(() => {
+
+                keys.m.pressed = true
+
+                lastEnemyKey = 'm'
+
+
+            })
+        
+            shooting = false
+        }
     }
 
 }) 
@@ -1092,7 +1174,14 @@ window.addEventListener('keyup',(event) => {
             player.isDefending = false
 
             break
-    }
+
+        case 'm':
+
+            keys.m.pressed = false
+
+            shooting = true
+
+     }
 
    
 }) 

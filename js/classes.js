@@ -30,7 +30,7 @@ class Sprite {
 
         c.drawImage(this.img, this.framesCurrent * (this.img.width / this.framesMax) , 0, this.img.width / this.framesMax, this.img.height, this.position.x - this.offset.x , this.position.y - this.offset.y ,  (this.img.width / this.framesMax) * this.scale, this.img.height  * this.scale)
         
-        //c.fillRect(this.position.x, this.position.y, this.width, this.height)
+       // c.fillRect(this.position.x, this.position.y, this.width, this.height)
 
     }
 
@@ -73,6 +73,57 @@ class Sprite {
                 }            
             }
     }
+
+
+class Projectile extends Sprite{
+
+    constructor({position, velocity, imgSrc, scale = 1, framesMax = 1, offset = {x: 0, y: 0}, sprites}){
+
+        super({position, imgSrc, scale, framesMax, offset})
+    
+        this.velocity = velocity
+
+        this.height = 30
+
+        this.width = 30
+
+        this.framesCurrent = 0
+
+        this.framesElapsed = 0
+
+        this.framesHold = 7
+
+        this.sprites = sprites
+
+        for (const sprite in this.sprites){
+
+            sprites[sprite].img = new Image()
+            sprites[sprite].img.src = sprites[sprite].imgSrc
+            this.framesCurrent = 0
+
+        }
+
+    }
+
+    update(){
+
+            this.draw()
+
+            this.animateFrames()
+
+            this.position.x += this.velocity.x
+
+        }
+
+        move(){
+
+            this.velocity.x = -24
+    
+        }
+    
+
+    }
+
 
 
 class Fighter extends Sprite{
@@ -125,6 +176,8 @@ class Fighter extends Sprite{
         this.sprites = sprites
 
         this.shield = this.health / 1.618
+
+        this.Projectiles = []
 
         for (const sprite in this.sprites){
 
@@ -199,4 +252,40 @@ class Fighter extends Sprite{
         }
 
 
+        shoot(){
+
+            this.Projectiles.push(new Projectile({
+        
+                position: { x: this.position.x,  y: this.position.y},
+
+                velocity: {x: this.velocity.x, y: 0},
+            
+                imgSrc: './images/Proj.png',
+            
+                scale: 1.3,
+            
+                framesMax: 4,
+            
+                offset: {x: 120, y: 58},
+            
+                sprites: {
+            
+                    idle: {
+                        
+                        imgSrc: './images/Kelev.png',
+                        framesMax: 8,
+                        scale: 2.6
+                    }            
+                }
+         } ))
+
+         this.Projectiles.forEach((proj) => {
+
+            proj.move()
+
+         })
+
+         //this.Projectiles.pop()
+
+        }
 }
