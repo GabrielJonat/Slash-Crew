@@ -121,6 +121,32 @@ const player = new Fighter({
             framesMax: 1,
             scale: 1.3
 
+        },
+
+        pickup: {
+
+            imgSrc: './images/Kelev_Sacando.png',
+            framesMax: 1,
+            scale: 1.3
+
+        },
+
+        defending: {
+
+            imgSrc: './images/Kelev_Defending.png',
+            framesMax: 1,
+            scale: 1.3
+
+
+        },
+
+        TryingToDefend: {
+
+            imgSrc: './images/Kelev_No_Shield.png',
+            framesMax: 1,
+            scale: 1.3
+
+
         }
 
     }
@@ -268,6 +294,12 @@ const keys = {
    },
 
    c: {
+
+        pressed: false
+
+   },
+
+   q: {
 
         pressed: false
 
@@ -690,6 +722,41 @@ function defAnimation(){
 
     }
 
+    if(keys.q.pressed && lastPlayerKey == 'q'){
+
+        player.isDefending = true
+
+        player.img = player.sprites.pickup.img
+
+        setTimeout(() => {
+            
+            console.log(player.isDefending, keys.q.pressed, player.shield)
+       
+        }, 500)
+
+    }
+
+    if (player.isDefending && player.shield <= 0){
+
+        player.img = player.sprites.TryingToDefend.img
+
+        player.framesMax = 4
+
+    }
+    if(player.isDefending && lastPlayerKey == 'q' && player.shield > 0){
+
+        player.img = player.sprites.defending.img
+
+        player.framesMax = 6
+
+    }
+
+    else{
+
+        player.isDefending = false
+
+    }
+
 
     if (player.position.x  >= enemy.position.x + enemy.width ){
 
@@ -746,15 +813,20 @@ function defAnimation(){
             enemy.attackBox.width = -161.8
             
             if (enemy.position.x + enemy.attackBox.width <= player.position.x + player.width && 
-                enemy.isAttacking){
+                enemy.isAttacking && (player.isDefending == false || player.shield <= 0)){
      
                 player.health -= 0.26
      
+
                 document.querySelector('#player-health').style.width = player.health + '%'
      
-                console.log('hit')
 
             }
+            else if(player.isDefending && player.shield > 0 && enemy.isAttacking){
+
+                player.shield -= 0.26
+
+           } 
     }
 
     else{
@@ -766,15 +838,18 @@ function defAnimation(){
                 enemy.img = enemy.sprites.idleReverse.img
 
             if(enemy.position.x + 161.8 >= player.position.x &&
-               enemy.isAttacking){
+               enemy.isAttacking && (player.isDefending == false || player.shield <= 0 )){
 
                 player.health -= 0.26
 
                 document.querySelector('#player-health').style.width = player.health + '%'
 
-                console.log('hit')
 
-           }  
+           } else if(player.isDefending && player.shield > 0 && enemy.isAttacking){
+
+                player.shield -= 0.26
+
+           } 
         
 
     }
@@ -793,7 +868,6 @@ function defAnimation(){
 
         player.position.y = canvas.height - 96 - player.height
     
-        console.log(enemy.isAttacking)
     }
 
 defAnimation()
@@ -879,7 +953,16 @@ window.addEventListener('keydown',(event) => {
             }
             
                 break
+        
+        case 'q':
 
+                setTimeout(() => {
+
+                    keys.q.pressed = true
+
+                    lastPlayerKey = 'q'
+
+                }, 150)
     }}
     
 }) 
@@ -1000,6 +1083,14 @@ window.addEventListener('keyup',(event) => {
 
             keys.ArrowUp.pressed = false
             
+            break
+
+        case 'q':
+
+            keys.q.pressed = false
+
+            player.isDefending = false
+
             break
     }
 

@@ -23,7 +23,7 @@ class Sprite {
         this.framesHold = 7
 
         this.offset = offset
-    
+
     }
 
     draw(){
@@ -101,6 +101,8 @@ class Fighter extends Sprite{
 
         this.isParalyzed = false
 
+        this.isDefending = false
+
         this.health = 100
 
         this.attackBox = {
@@ -121,6 +123,8 @@ class Fighter extends Sprite{
         this.framesHold = 7
 
         this.sprites = sprites
+
+        this.shield = this.health / 1.618
 
         for (const sprite in this.sprites){
 
