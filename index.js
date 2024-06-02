@@ -501,10 +501,12 @@ function defAnimation(){
         }
     }
 
-    if (keys.w.pressed && player.velocity.y == 0 || keys.w.pressed && upon){
+    if (keys.w.pressed && player.velocity.y == 0 || keys.w.pressed && upon && player.isDefending == false){
 
         keys.e.pressed = false
 
+        keys.q.pressed = false
+        
         setTimeout(function(){player.velocity.y = -23}, 150)
 
 
@@ -642,7 +644,7 @@ function defAnimation(){
 
         AttackRampage = false
 
-    if (keys.e.pressed && keys.a.pressed == false && keys.d.pressed == false && player.velocity.y == 0 && AttackRampage == false){
+    if (keys.e.pressed && keys.a.pressed == false && keys.d.pressed == false && player.velocity.y == 0 && AttackRampage == false && player.isDefending == false){
 
         player.attack()
 
@@ -803,7 +805,7 @@ function defAnimation(){
 
     }
 
-    if(keys.q.pressed && lastPlayerKey == 'q' && !AttackRampage){
+    if(keys.q.pressed && lastPlayerKey == 'q' && !AttackRampage && player.position.y + player.height > canvas.height - 100){
 
         player.isDefending = true
 
@@ -824,7 +826,7 @@ function defAnimation(){
         player.framesMax = 4
 
     }
-    if(player.isDefending && lastPlayerKey == 'q' && player.shield > 0){
+    if(player.isDefending && lastPlayerKey == 'q' && player.shield > 0 && player.position.y + player.height > canvas.height - 100){
 
         player.img = player.sprites.defending.img
 
