@@ -33,7 +33,7 @@ const shop = new Sprite({
 
 const player = new Fighter({
 
-    position: { x: 0, y: 0},
+    position: { x: 40, y: 0},
 
     velocity: {x: 0, y: 10},
 
@@ -155,7 +155,7 @@ const player = new Fighter({
 
 const enemy = new Fighter({
 
-    position: { x: 921, y: 100},
+    position: { x: 930, y: 100},
 
     velocity: {x: 0, y: 10},
 
@@ -1085,6 +1085,7 @@ var shooting = true
 
 window.addEventListener('keydown',(event) => {
    
+    
     if (event.repeat != undefined) {
         allowed = !event.repeat;
       }
@@ -1210,3 +1211,9 @@ window.addEventListener('keyup',(event) => {
 window.addEventListener('focus', function(e){
     allowed = true;
 })
+
+document.addEventListener('keydown', function(event) {
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+        event.preventDefault();
+    }
+});
