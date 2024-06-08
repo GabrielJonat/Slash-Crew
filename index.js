@@ -1188,6 +1188,7 @@ var shooting = true
 
 window.addEventListener('keydown',(event) => {
    
+    
     if (event.repeat != undefined) {
         allowed = !event.repeat;
       }
@@ -1315,3 +1316,9 @@ window.addEventListener('keyup',(event) => {
 window.addEventListener('focus', function(e){
     allowed = true;
 })
+
+document.addEventListener('keydown', function(event) {
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+        event.preventDefault();
+    }
+});
