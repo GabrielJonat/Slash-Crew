@@ -1,6 +1,6 @@
 const canvas = document.querySelector('canvas')
-const c = canvas.getContext('2d')
 
+const c = canvas.getContext('2d')
 
 canvas.width = 1024
 
@@ -10,9 +10,43 @@ c.fillRect(0, 0, canvas.width, canvas.height)
 
 const gravity = 0.98
 
-
-
 let lastPlayerKey, lastEnemyKey, upon = false
+
+let hitSound = new Audio("./audio/hitSound.wav")
+
+let whistleSound = new Audio("./audio/whistleSound.wav")
+
+let swordHit = new Audio("./audio/swordHit.wav")
+
+let spearHit = new Audio("./audio/spearHit.wav")
+
+let kelevDash = new Audio("./audio/KelevDash.mp3")
+
+let dashMiss = new Audio("./audio/DashMiss.mp3")
+
+let shielPick = new Audio("./audio/ShieldPickup.wav")
+
+let mikeyJump = new Audio("./audio/MikeySceam.wav")
+
+let kelevJump = new Audio("./audio/Effort.wav")
+
+let angryBark = new Audio("./audio/AngryBark.wav")
+
+let shieldWorking = new Audio("./audio/ShieldWorked.wav")
+
+let kelevLost = new Audio("./audio/KelevLost.wav")
+
+let mikeyLost = new Audio("./audio/MikeyLost.wav")
+
+let inicio = new Audio("./audio/inicio.wav")
+
+let meio = new Audio("./audio/meio.mp3")
+
+let fim = new Audio("./audio/fim.mp3")
+
+let run = new Audio("./audio/run.mp4")
+
+let uivou = false
 
 const background = new Sprite({
     position: {x: 0, y: 0},
@@ -33,7 +67,7 @@ const shop = new Sprite({
 
 const player = new Fighter({
 
-    position: { x: 0, y: 0},
+    position: { x: 100, y: 0},
 
     velocity: {x: 0, y: 10},
 
@@ -155,7 +189,7 @@ const player = new Fighter({
 
 const enemy = new Fighter({
 
-    position: { x: 921, y: 100},
+    position: { x: 821, y: 100},
 
     velocity: {x: 0, y: 10},
 
@@ -321,6 +355,7 @@ const keys = {
 
 }
 
+
 function getWinner(player, enemy, timerId){
 
     clearTimeout(timerId)
@@ -339,7 +374,7 @@ function getWinner(player, enemy, timerId){
 
         enemy.framesMax = 1
 
-        enemy.die()
+        enemy.die(mikeyLost)
 
         enemy.isAttacking = false
 
@@ -359,8 +394,8 @@ function getWinner(player, enemy, timerId){
         player.offset.y = 60
 
         player.scale = 2
-        
-        player.die()
+
+        player.die(kelevLost)
 
         player.height = 60
 
@@ -406,6 +441,26 @@ function defAnimation(){
 
     c.fillRect(0, 0, canvas.width, canvas.height)
 
+    if(enemy.health == 100 && player.health == 100){
+
+        inicio.play();
+
+    }
+
+    if(fim.paused && (document.querySelector("#outcome").innerHTML != "Kelev Wins" && document.querySelector("#outcome").innerHTML != "Michael The Duck Wins" )){
+    
+        meio.play();
+
+    }
+
+    if(timer == 33){
+
+        meio.pause();
+
+        fim.play();
+
+    }
+
     background.update() 
 
     shop.update()
@@ -419,13 +474,15 @@ function defAnimation(){
         if(keys.m.pressed == false) 
             
             proj.update()
-        
+
         if(proj.position.x >= player.position.x && proj.position.x <= player.position.x + player.width && proj.position.y < player.position.y + player.height ){
         
             enemy.Projectiles.pop(proj)
             
             if(! player.isDashing && ! player.isAttacking){
             
+                whistleSound.play();
+        
                 player.health -= 1 
 
                 document.querySelector('#player-health').style.width = player.health + '%'
@@ -465,6 +522,8 @@ function defAnimation(){
       player.position.x < enemy.position.x || player.position.y + player.height < enemy.position.y
      )){
 
+        run.play();
+
         keys.e.pressed = false
 
         player.velocity.x = -10
@@ -485,6 +544,8 @@ function defAnimation(){
             player.position.x >= enemy.position.x + enemy.width || player.position.y + player.height < enemy.position.y)
          ){
 
+            run.play();
+            
             keys.e.pressed = false
 
             player.velocity.x = 10
@@ -503,6 +564,8 @@ function defAnimation(){
 
     if (keys.w.pressed && player.velocity.y == 0 || keys.w.pressed && upon && player.isDefending == false){
 
+        kelevJump.play();
+
         keys.e.pressed = false
 
         keys.q.pressed = false
@@ -519,6 +582,8 @@ function defAnimation(){
        enemy.position.x < player.position.x || enemy.position.y + enemy.height < player.position.y)
     ){
     
+        run.play()
+
         keys.n.pressed = false
 
         enemy.velocity.x = -10
@@ -541,8 +606,10 @@ function defAnimation(){
         
         if (keys.ArrowRight.pressed && lastEnemyKey === 'ArrowRight' && enemy.position.x <= 970 &&
            (enemy.position.x + enemy.width <= player.position.x - 10 || 
-           enemy.position.x >= player.position.x + player.width || enemy.position.y + enemy.height < player.position.y)){
-    
+           enemy.position.x >= player.position.x + player.width || enemy.position.y + enemy.height < player.position.y)){    
+        
+        run.play()
+
         keys.n.pressed = false
 
         enemy.velocity.x = 10
@@ -562,6 +629,9 @@ function defAnimation(){
 }
 
     if (keys.ArrowUp.pressed && enemy.velocity.y === 0 || keys.ArrowUp.pressed && upon ){
+
+        
+        mikeyJump.play();
 
         keys.n.pressed = false
 
@@ -744,8 +814,10 @@ function defAnimation(){
 
     if (enemyPulo && player.isDashing){
 
-        player.paralyze()
+        
+        dashMiss.play();
 
+        player.paralyze()
 
     }
 
@@ -807,6 +879,8 @@ function defAnimation(){
 
     if(keys.q.pressed && lastPlayerKey == 'q' && !AttackRampage && player.position.y + player.height > canvas.height - 100){
 
+        shielPick.play();
+
         player.isDefending = true
 
         player.img = player.sprites.pickup.img
@@ -820,6 +894,10 @@ function defAnimation(){
     }
 
     if (player.isDefending && player.shield <= 0){
+
+        angryBark.play();
+
+        shielPick.pause();
 
         player.img = player.sprites.TryingToDefend.img
 
@@ -847,9 +925,12 @@ function defAnimation(){
         
             if (player.position.x + player.attackBox.width <= enemy.position.x ){
         
+        
                 if(player.isAttacking){
                 
                     enemy.health -= 0.38 
+                
+                    swordHit.play();
                 
                 }
 
@@ -857,11 +938,13 @@ function defAnimation(){
 
                     enemy.health -= 1.6
 
+                    swordHit.play();
+                
                 }
 
+                
                 document.querySelector('#enemy-health').style.width = enemy.health + '%'
         
-
             }
 
         }
@@ -874,12 +957,17 @@ function defAnimation(){
             {
 
                 if(player.isAttacking){
-            
+
+                    swordHit.play();
+                
                     enemy.health -= 0.38    
                 
             }
 
                 else if(player.isDashing && enemy.velocity.y === 0){
+
+                    swordHit.play();
+                
 
                     enemy.health -= 1.6
 
@@ -898,6 +986,8 @@ function defAnimation(){
             if (enemy.position.x + enemy.attackBox.width <= player.position.x + player.width && 
                 enemy.isAttacking && (player.isDefending == false || player.shield <= 0)){
      
+                spearHit.play();
+
                 player.health -= 0.26
      
 
@@ -906,6 +996,8 @@ function defAnimation(){
 
             }
             else if(player.isDefending && player.shield > 0 && enemy.isAttacking){
+
+                shieldWorking.play();
 
                 player.shield -= 0.26
 
@@ -922,6 +1014,9 @@ function defAnimation(){
 
             if(enemy.position.x + 161.8 >= player.position.x &&
                enemy.isAttacking && (player.isDefending == false || player.shield <= 0 )){
+               
+                
+                spearHit.play();
 
                 player.health -= 0.26
 
@@ -929,6 +1024,9 @@ function defAnimation(){
 
 
            } else if(player.isDefending && player.shield > 0 && enemy.isAttacking){
+
+                
+                shieldWorking.play();
 
                 player.shield -= 0.26
 
@@ -1017,6 +1115,9 @@ window.addEventListener('keydown',(event) => {
 
                 if(Math.abs((player.position.x + player.width) - enemy.position.x) >= 450  && lastPlayerKey != 'v' && !upon){
             
+                    
+                    kelevDash.play();
+                    
                     keys.e.pressed = false
 
                     keys.v.pressed = true
@@ -1031,6 +1132,8 @@ window.addEventListener('keydown',(event) => {
 
                 if(Math.abs((player.position.x + player.width) - enemy.position.x) >= 450  && lastPlayerKey != 'c' && !upon){
                     
+                    kelevDash.play();
+
                     keys.c.pressed = true
                 
                     lastPlayerKey = 'c'
@@ -1154,7 +1257,6 @@ window.addEventListener('keydown',(event) => {
 
                 lastEnemyKey = 'm'
 
-
             })
         
             shooting = false
@@ -1199,6 +1301,9 @@ window.addEventListener('keyup',(event) => {
         case 'm':
 
             keys.m.pressed = false
+
+            
+            hitSound.play();
 
             shooting = true
 

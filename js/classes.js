@@ -150,6 +150,8 @@ class Fighter extends Sprite{
         
         this.isDead = false
 
+        this.lastWords = 0
+
         this.isParalyzed = false
 
         this.isDefending = false
@@ -246,10 +248,20 @@ class Fighter extends Sprite{
             }, 1760)
 
         }
-        die(){
+        
+        die(dyingAudio){
 
             this.isDead = true
-        }
+        
+            if(this.lastWords == 0){
+
+                dyingAudio.play()
+
+                this.lastWords ++
+
+            }
+
+    }
 
 
         shoot(){
