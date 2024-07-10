@@ -44,9 +44,11 @@ class Sprite {
 
                         this.framesCurrent ++ 
                 
-                    else
+                    else{
                 
                         this.framesCurrent = 0
+                        this.loops ++
+                    }
 
                 }
 
@@ -128,7 +130,7 @@ class Projectile extends Sprite{
 
 class Fighter extends Sprite{
 
-    constructor({position, velocity, imgSrc, scale = 1, framesMax = 1, offset = {x: 0, y: 0}, sprites}, attackWidth, attackHeight){
+    constructor({position, velocity, imgSrc, scale = 1, framesMax = 1, offset = {x: 0, y: 0}, sprites},attackWidth, attackHeight,duration=1760){
 
         super({
             position,
@@ -147,7 +149,9 @@ class Fighter extends Sprite{
         this.isAttacking = false
 
         this.isDashing = false
-        
+
+        this.isGrapling = false
+
         this.isDead = false
 
         this.lastWords = 0
@@ -175,11 +179,17 @@ class Fighter extends Sprite{
 
         this.framesHold = 7
 
+        this.loops = 0
+
+        this.boot = false
+
         this.sprites = sprites
 
         this.shield = this.health / 1.618
 
         this.Projectiles = []
+
+        duration== 1 ? this.paralyzationDuration = 500 : this.paralyzationDuration = 1760 
 
         for (const sprite in this.sprites){
 
@@ -237,6 +247,17 @@ class Fighter extends Sprite{
 
         }
 
+        graple(){
+
+            this.isGrapling = true
+
+            setTimeout(() =>{
+
+                this.isGrapling = false
+
+            }, 1000)
+
+        }
         paralyze(){
 
             this.isParalyzed = true
@@ -244,18 +265,23 @@ class Fighter extends Sprite{
             setTimeout(() =>{
 
                 this.isParalyzed = false
+                this.boot = false
 
-            }, 1760)
+            }, this.paralyzationDuration)
 
         }
         
-        die(dyingAudio){
+        die(dyingAudio,tautingAudio){
 
             this.isDead = true
         
             if(this.lastWords == 0){
 
                 dyingAudio.play()
+
+                if(tautingAudio)
+                    
+                    tautingAudio.play()
 
                 this.lastWords ++
 
@@ -299,5 +325,11 @@ class Fighter extends Sprite{
 
          //this.Projectiles.pop()
 
+        }
+
+        initiateMove(){
+
+            this.framesCurrent = 0
+            this.loops = 0
         }
 }
