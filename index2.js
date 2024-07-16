@@ -586,8 +586,6 @@ function defAnimation(){
 
     enemyPulo = false
 
-    playerPulo = false
-
     player.velocity.x = 0
 
     player.img = player.sprites.idle.img
@@ -605,6 +603,8 @@ function defAnimation(){
     player.scale = 1.8
 
     player.offset = {x: 120, y: 58}
+
+    console.log(playerPulo)
 
     if(keys.m.pressed === true && lastEnemyKey === 'm'){
  
@@ -754,8 +754,6 @@ function defAnimation(){
             player.velocity.y = -23 
             keys.w.pressed = false}, 150)
 
-        playerPulo = true
-
     }
 
     enemy.velocity.x = 0
@@ -837,6 +835,16 @@ function defAnimation(){
 
         enemyPulo = true
 
+    }
+
+    if(keys.w.pressed || lastPlayerKey === 'w' || player.position.y + player.height < canvas.height - 100){
+
+        playerPulo = true
+
+    }
+    else{
+
+        playerPulo = false
     }
 
     if(player.position.y + player.height < canvas.height - 100 && player.velocity.y != 0 && !upon){
@@ -1043,7 +1051,6 @@ function defAnimation(){
 
             if(keys.ArrowDown.pressed){
 
-                console.log(true)
                 keys.n.pressed = false
                 enemy.paralyzationDuration = 1000
                 enemy.paralyze()
@@ -1219,7 +1226,7 @@ function defAnimation(){
      
                 spearHit.play();
 
-                if(enemy.isAttacking){
+                if(enemy.isAttacking && !playerPulo){
                     
                     if(lastPlayerKey === 'c' || lastPlayerKey === 'v'){
                         
@@ -1288,7 +1295,7 @@ function defAnimation(){
             }
 
             if(enemy.position.x + 350 >= player.position.x &&
-               enemy.isAttacking && (player.isDefending == false || player.shield <= 0 ) && (enemy.framesCurrent >= 5)){
+               enemy.isAttacking && (player.isDefending == false || player.shield <= 0 ) && (enemy.framesCurrent >= 5) && !playerPulo){
                
                 
                 spearHit.play();
