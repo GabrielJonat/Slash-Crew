@@ -374,6 +374,8 @@ function getWinner(player, enemy, timerId){
 
         enemy.framesMax = 1
 
+        keys.n.pressed = false
+
         enemy.die(mikeyLost)
 
         enemy.isAttacking = false
@@ -395,6 +397,7 @@ function getWinner(player, enemy, timerId){
 
         player.scale = 2
 
+        keys.e.pressed = false
         player.die(kelevLost)
 
         player.height = 60
@@ -1063,7 +1066,7 @@ window.addEventListener('keydown',(event) => {
       if (!allowed) return;
       allowed = false;
 
-    if(!player.isParalyzed){
+    if(!player.isParalyzed && !player.isDead){
 
     switch(event.key){
 
@@ -1196,6 +1199,7 @@ window.addEventListener('keydown',(event) => {
       allowed = false;
 
 
+      if(!enemy.isDead && !enemy.isParalyzed){
     switch(event.key){
 
         case 'ArrowRight':
@@ -1263,6 +1267,7 @@ window.addEventListener('keydown',(event) => {
             shooting = false
         }
     }
+}
 
 }) 
 

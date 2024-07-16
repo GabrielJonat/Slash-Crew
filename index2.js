@@ -335,13 +335,23 @@ const enemy = new Fighter({
 
         imgSrc: './images/Anak_Misses.png'
     },
+   
     missReverse: {
 
         imgSrc: './images/Anak_Misses_Reverse.png'
-    }}
+    },
+
+    uppercut: {
+
+        imgSrc: './images/Anak_Upper.png'
+    },
+
+}
     }, 300, 100, 1)
 
     enemy.height = 200
+
+    enemy.moves = [false,false]
 
 
 const keys = {
@@ -378,6 +388,12 @@ const keys = {
     },
 
     ArrowUp: {
+
+        pressed: false
+
+    },
+    
+    ArrowDown: {
 
         pressed: false
 
@@ -448,6 +464,9 @@ function getWinner(player, enemy, timerId){
 
         enemy.scale = 0.28
 
+        keys.ArrowUp = false
+        keys.n.pressed = false
+        keys.m.pressed = false
         enemy.die(anakLost,null)
 
 
@@ -477,6 +496,7 @@ function getWinner(player, enemy, timerId){
 
         timer >= 60 ? audio = AnakWins2 : AnakWins
         
+        keys.e.pressed = false
         player.die(kelevLost, audio)
 
         player.height = 60
@@ -590,59 +610,6 @@ function defAnimation(){
  
         enemy.graple()
 
-        setTimeout(() => {
-
-            if(Math.abs(player.position.x - enemy.position.x) <= 500){
-
-    
-                if(player.isAttacking || upon || playerPulo || player.isDefending || lastPlayerKey === 'e' || player.isDashing){
-    
-                    audioTest(AnakHit, anakAudio)
-                    audioTest(angryBark,kelevAudio)
-                    enemy.paralyzationDuration = 3000
-                    enemy.paralyze()
-                    enemy.health -= 12
-                    audioTest(AnakHit, anakAudio)
-                    document.querySelector('#enemy-health').style.width = enemy.health + '%'
-                    audioTest(anakLost,anakAudio)
-                }
-    
-                else{
-    
-                    let audio;
-                    timer % 2 == 0? audio = getOverHere : audio = getHere
-                    audioTest(audio, anakAudio)
-                    audioTest(dashMiss, kelevAudio)
-                    player.health -= 8
-                    document.querySelector('#player-health').style.width = player.health + '%'
-                    if(player.position.x > enemy.position.x){
-
-                        enemy.paralyzationDuration = 500
-                        enemy.paralyze()
-                        while(Math.abs(player.position.x - enemy.position.x) >= 80){
-    
-                            player.paralyze()
-                            player.position.x -= 1
-                            player.position.x += 0.6
-                        }
-                    }
-                    else{
-    
-                        audioTest(getHere, anakAudio)
-                        audioTest(dashMiss, kelevAudio)
-                        enemy.paralyzationDuration = 500
-                        enemy.paralyze()
-                        while(Math.abs(player.position.x - enemy.position.x) >= 80){
-                        
-                            player.paralyze()
-                            player.position.x += 1
-                            player.position.x -= 0.6
-                       }
-                    }
-                }
-            }
-        }, 100)
-
         keys.m.pressed = false
         
     }
@@ -673,6 +640,60 @@ function defAnimation(){
         enemy.offset.y = 300
 
         }
+
+                if(enemy.framesCurrent > 3 && !keys.a.pressed && !keys.d.pressed)
+                setTimeout(() => {
+
+                    if(Math.abs(player.position.x - enemy.position.x) <= 500){
+        
+            
+                        if(player.isAttacking || upon || playerPulo || player.isDefending || lastPlayerKey === 'e' || player.isDashing){
+            
+                            audioTest(AnakHit, anakAudio)
+                            audioTest(angryBark,kelevAudio)
+                            enemy.paralyzationDuration = 3000
+                            enemy.paralyze()
+                            enemy.health -= 0.2
+                            audioTest(AnakHit, anakAudio)
+                            document.querySelector('#enemy-health').style.width = enemy.health + '%'
+                            audioTest(anakLost,anakAudio)
+                        }
+            
+                        else{
+            
+                            let audio;
+                            timer % 2 == 0? audio = getOverHere : audio = getHere
+                            audioTest(audio, anakAudio)
+                            audioTest(dashMiss, kelevAudio)
+                            player.health -= 0.2
+                            document.querySelector('#player-health').style.width = player.health + '%'
+                            if(player.position.x > enemy.position.x){
+    
+                                enemy.paralyzationDuration = 500
+                                enemy.paralyze()
+                                while(Math.abs(player.position.x - enemy.position.x) >= 80){
+            
+                                    player.paralyze()
+                                    player.position.x -= 0.2
+                                    player.position.x += 0.6
+                                }
+                            }
+                            else{
+            
+                                audioTest(getHere, anakAudio)
+                                audioTest(dashMiss, kelevAudio)
+                                enemy.paralyzationDuration = 500
+                                enemy.paralyze()
+                                while(Math.abs(player.position.x - enemy.position.x) >= 80){
+                                
+                                    player.paralyze()
+                                    player.position.x += 1
+                                    player.position.x -= 0.6
+                               }
+                            }
+                        }
+                    }
+                }, 100)
     }
 
     if (keys.a.pressed && lastPlayerKey === 'a' && player.position.x >= 10 &&
@@ -748,6 +769,8 @@ function defAnimation(){
 
         keys.n.pressed = false
 
+        keys.ArrowUp.pressed = false
+
         enemy.velocity.x = -5
 
         enemy.img = enemy.sprites.toTheLeft.img
@@ -767,6 +790,8 @@ function defAnimation(){
 
         keys.n.pressed = false
 
+        keys.ArrowUp.pressed = false
+
         enemy.velocity.x = 5
         
         enemy.img = enemy.sprites.toTheRight.img
@@ -776,7 +801,7 @@ function defAnimation(){
     }
 }
 
-    if (keys.ArrowUp.pressed){
+    if (keys.ArrowUp.pressed && lastEnemyKey === 'ArrowUp'){
 
         let audio
 
@@ -787,8 +812,6 @@ function defAnimation(){
             audioTest(audio, anakAudio)
         }
         keys.n.pressed = false
-
-        enemyPulo = true
 
         if(enemy.attackBox.width < 0){
 
@@ -803,13 +826,16 @@ function defAnimation(){
 
         enemy.scale = 1.8
     
-        enemy.offset = {x: 340, y: 50}
+        enemy.offset = {x: 340, y: 40}
 
         if(upon){
 
-            player.health -= 0.6
+            player.health -= 0.2
+            spearHit.play()
+            document.querySelector('#player-health').style.width = player.health + '%' 
         }
 
+        enemyPulo = true
 
     }
 
@@ -970,7 +996,7 @@ function defAnimation(){
 
     }
 
-    if (enemyPulo && player.isDashing){
+    if (enemyPulo && player.isDashing && Math.abs(player.position.x - enemy.position.x) < 320){
 
         player.isDashing = false
 
@@ -983,6 +1009,11 @@ function defAnimation(){
 
     if(player.isParalyzed){
 
+        if(player.position.x + player.height < canvas.height - 100){
+
+            player.img = player.sprites.jump.img
+        }
+        else{
         player.img = player.sprites.paralyze.img
 
         player.framesMax = 7
@@ -990,6 +1021,7 @@ function defAnimation(){
         player.scale = 1.8
 
         player.offset = {x: 120, y: 60}
+        }
 
     }
 
@@ -1007,9 +1039,21 @@ function defAnimation(){
 
         }, 120)
         
-        if (enemy.attackBox.width < 0)
+        if (enemy.attackBox.width < 0){
 
+            if(keys.ArrowDown.pressed){
+
+                console.log(true)
+                keys.n.pressed = false
+                enemy.paralyzationDuration = 1000
+                enemy.paralyze()
+                enemy.framesMax = 10
+                enemy.moves[0] = true
+
+            }
             enemy.img = enemy.sprites.thrust.img
+
+        }
         
         else
 
@@ -1060,6 +1104,31 @@ function defAnimation(){
         enemy.framesCurrent < 7? enemy.offset.y = -20 : enemy.offset.y = 12
         }
     }
+
+    if(enemy.moves[0]){
+
+        enemy.img = enemy.sprites.uppercut.img
+        enemy.framesMax = 10
+        enemy.scale = 1.9
+        enemy.offset.y = 170
+        enemy.offset.x = 300
+        setTimeout(() => {
+            if(Math.abs(player.position.x - enemy.position.x) < 320 && enemy.loops < 1 && enemy.framesCurrent > 4 && !player.isDefending){
+
+                audioTest(angryBark, kelevAudio)
+                spearHit.play()
+                player.velocity.y = -23
+                player.velocity.x = -120
+                player.paralyzationDuration = 500
+                player.paralyze()
+                player.health -= 3
+                document.querySelector('#player-health').style.width = player.health + '%'    
+            }
+            enemy.moves[0] = false
+        },1000)
+    }
+
+   
     if(player.isDefending && lastPlayerKey == 'q' && player.shield > 0 && player.position.y + player.height > canvas.height - 100){
 
         player.img = player.sprites.defending.img
@@ -1166,7 +1235,7 @@ function defAnimation(){
                         player.health -= 2.3}
                 }
 
-                if(enemyPulo){
+                if(enemyPulo && enemy.framesCurrent > 2){
 
                     
                     if(!player.isParalyzed && !upon && !(player.position.y + player.height < 400)){
@@ -1202,7 +1271,7 @@ function defAnimation(){
             
                 enemy.img = enemy.sprites.idleReverse.img
 
-            if(enemyPulo){
+            if(enemyPulo && enemy.framesCurrent > 3){
 
                 if(!player.isParalyzed && !upon && !(player.position.y + player.height < 400) && Math.abs(enemy.position.x - player.position.x) <= 200){
                         
@@ -1311,6 +1380,7 @@ window.addEventListener('keydown',(event) => {
                 setTimeout(() => {
                     
                     keys.e.pressed = !keys.e.pressed
+                    lastPlayerKey = 'e'
                     
                 }, 150)
             }
@@ -1392,20 +1462,19 @@ window.addEventListener('keyup',(event) => {
 
 window.addEventListener('keydown',(event) => {
    
-    
     if (event.repeat != undefined) {
         allowed = !event.repeat;
       }
       if (!allowed) return;
       allowed = false;
 
-
+      
     if(!enemy.isParalyzed && !enemy.isDead){
     switch(event.key){
 
         case 'ArrowRight':
 
-            if(! enemy.isDead){
+            if(! enemy.isGrapling){
             
                 keys.ArrowRight.pressed = true
                 
@@ -1417,7 +1486,7 @@ window.addEventListener('keydown',(event) => {
 
         case 'ArrowLeft':
 
-        if(! enemy.isDead){
+        if(! enemy.isGrapling){
             
             keys.ArrowLeft.pressed = true
             
@@ -1429,9 +1498,26 @@ window.addEventListener('keydown',(event) => {
             
         case 'ArrowUp':
 
+            if(! enemy.isGrapling){
+
+                setTimeout(() => {
+
+                    enemy.framesCurrent = 0
+                    keys.ArrowUp.pressed = !keys.ArrowUp.pressed
+                    lastEnemyKey = 'ArrowUp'
+
+                }, 100)
+                
+            }
+
+            break
+
+            case 'ArrowDown':
+
             if(! enemy.isDead){
 
-                keys.ArrowUp.pressed = true
+                keys.ArrowDown.pressed = true
+                lastEnemyKey = 'ArrowDown'
 
             }
 
@@ -1443,8 +1529,10 @@ window.addEventListener('keydown',(event) => {
             if(! enemy.isDead){
             
                 setTimeout(() => {
-            
-                keys.n.pressed = !keys.n.pressed
+
+                    enemy.framesCurrent = 0
+                    keys.n.pressed = !keys.n.pressed
+                    lastEnemyKey = 'n'
 
 
             }, 300)
@@ -1455,8 +1543,10 @@ window.addEventListener('keydown',(event) => {
 
         case 'm':
 
+        if(!player.isDashing)
         setTimeout(() => {
             
+            enemy.framesCurrent = 0
             keys.m.pressed = true
             audioTest(getOverHere, anakAudio)
             lastEnemyKey = 'm'
@@ -1484,9 +1574,9 @@ window.addEventListener('keyup',(event) => {
             break
 
 
-        case 'ArrowUp':
+        case 'ArrowDown':
 
-            keys.ArrowUp.pressed = false
+            keys.ArrowDown.pressed = false
             
             break
 

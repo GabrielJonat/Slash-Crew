@@ -189,6 +189,8 @@ class Fighter extends Sprite{
 
         this.Projectiles = []
 
+        this.moves = []
+
         duration== 1 ? this.paralyzationDuration = 500 : this.paralyzationDuration = 1760 
 
         for (const sprite in this.sprites){
@@ -286,6 +288,7 @@ class Fighter extends Sprite{
                 this.lastWords ++
 
             }
+
 
     }
 
