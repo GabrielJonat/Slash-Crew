@@ -472,13 +472,14 @@ function defAnimation(){
 
     enemy.update(true)
 
+    if(Math.abs(enemy.position.x - player.position.x) >= 375){
     enemy.Projectiles.forEach((proj) => { 
         
-        if(keys.m.pressed == false) 
+        if(keys.m.pressed == false && shooting) 
             
             proj.update()
 
-        if(proj.position.x >= player.position.x && proj.position.x <= player.position.x + player.width && proj.position.y < player.position.y + player.height ){
+        if(proj.position.x >= player.position.x && proj.position.x <= player.position.x + player.width && proj.position.y < player.position.y + player.height && Math.abs(enemy.position.x - player.position.x) >= 375){
         
             enemy.Projectiles.pop(proj)
             
@@ -486,7 +487,7 @@ function defAnimation(){
             
                 whistleSound.play();
         
-                player.health -= 1 
+                player.health -= 0.2 
 
                 document.querySelector('#player-health').style.width = player.health + '%'
            
@@ -497,7 +498,11 @@ function defAnimation(){
             enemy.Projectiles = []
         }
 
-            })
+            })}
+    else{
+
+        keys.m.pressed = true
+    }
 
     enemyPulo = false
 
@@ -836,7 +841,7 @@ function defAnimation(){
         player.offset = {x: 120, y: 60}
 
     }
-
+Math
     if(keys.m.pressed == true && lastEnemyKey == 'm'  && enemy.attackBox.width < 0 && enemy.position.y + enemy.height >= canvas.height - 100 && Math.abs(enemy.position.x - player.position.x) >= 375 && attackMode == false){
 
         enemy.shoot()
@@ -932,6 +937,8 @@ function defAnimation(){
                 if(player.isAttacking){
                 
                     enemy.health -= 0.38 
+
+                    keys.m.pressed = false
                 
                     swordHit.play();
                 
@@ -987,7 +994,7 @@ function defAnimation(){
             enemy.attackBox.width = -161.8
             
             if (enemy.position.x + enemy.attackBox.width <= player.position.x + player.width && 
-                enemy.isAttacking && (player.isDefending == false || player.shield <= 0)){
+                enemy.isAttacking && (player.isDefending == false || player.shield <= 0) && player.position.y + player.height > canvas.height - 100){
      
                 spearHit.play();
 
@@ -1016,7 +1023,7 @@ function defAnimation(){
                 enemy.img = enemy.sprites.idleReverse.img
 
             if(enemy.position.x + 161.8 >= player.position.x &&
-               enemy.isAttacking && (player.isDefending == false || player.shield <= 0 )){
+               enemy.isAttacking && (player.isDefending == false || player.shield <= 0 ) && player.position.y + player.height > canvas.height - 100){
                
                 
                 spearHit.play();
@@ -1254,13 +1261,17 @@ window.addEventListener('keydown',(event) => {
 
         case 'm':
 
-            if(shooting){
+        enemy.paralyzationDuration = 800
+        enemy.paralyze()
+            if(shooting && keys.m.pressed == false){
            
                 setTimeout(() => {
 
                 keys.m.pressed = true
 
                 lastEnemyKey = 'm'
+
+                
 
             })
         
@@ -1305,14 +1316,19 @@ window.addEventListener('keyup',(event) => {
             break
 
         case 'm':
-
-            keys.m.pressed = false
-
             
-            hitSound.play();
+                
+                setTimeout(() => {
+                    keys.m.pressed = false
+        
+                hitSound.play();
 
-            shooting = true
-
+                //if(enemy.img == enemy.sprites.img){
+                    
+                    shooting = true
+                //}
+                }, 200)
+                
      }
 
    
