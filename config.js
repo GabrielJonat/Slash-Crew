@@ -1,6 +1,6 @@
 let player1 = 'Anak'
 let player2 = 'Kelev'
-let combinations = [['Anak','Kelev'],['Kelev','Michael the Duck']]
+let combinations = [['Anak','Kelev'],['Kelev','Michael the Duck'],['Anak','Michael the Duck']]
 
 function handleSubmit(event,idForm,idVeredict) {
     event.preventDefault(); // Prevent form from submitting normally
@@ -48,6 +48,11 @@ function handleSubmit(event,idForm,idVeredict) {
     if(combinations[1].includes(player1) && combinations[1].includes(player2)){
 
             playButton.innerHTML = `<a style="width: 500px; margin-left: 600px; height: 80px; text-align: center; margin-bottom: 20px; font-size: 40px;" class=" my-3 btn btn-primary" href="./index2.html">Jogar</a>`
-        } 
+        }
+    else
+    if(combinations[2].includes(player1) && combinations[2].includes(player2)){
+
+            playButton.innerHTML = `<a style="width: 500px; margin-left: 600px; height: 80px; text-align: center; margin-bottom: 20px; font-size: 40px;" class=" my-3 btn btn-primary" href="./index3.html">Jogar</a>`
+        }  
 
 }

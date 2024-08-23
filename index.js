@@ -929,7 +929,7 @@ Math
 
     if (player.position.x  >= enemy.position.x + enemy.width ){
 
-            player.attackBox.width = -120
+            player.attackBox.width = -170
         
             if (player.position.x + player.attackBox.width <= enemy.position.x ){
         
@@ -961,7 +961,7 @@ Math
     
     else{
 
-            player.attackBox.width = 120
+            player.attackBox.width = 170
     
             if (player.position.x + player.attackBox.width >= enemy.position.x && enemy.position.y + enemy.height > player.position.y)
             {
