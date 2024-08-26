@@ -42,17 +42,17 @@ function handleSubmit(event,idForm,idVeredict) {
     
     if(combinations[0].includes(player1) && combinations[0].includes(player2)){
 
-            playButton.innerHTML = `<a style="width: 500px; margin-left: 600px; height: 80px; text-align: center; margin-bottom: 20px; font-size: 40px;" class=" my-3 btn btn-primary" href="./index.html">Jogar</a>`
+            playButton.innerHTML = `<a style="width: 300px; height: 80px; text-align: center; margin-bottom: 20px; font-size: 40px;" class=" my-3 btn btn-primary" href="./index.html">Jogar</a>`
         }
     else
     if(combinations[1].includes(player1) && combinations[1].includes(player2)){
 
-            playButton.innerHTML = `<a style="width: 500px; margin-left: 600px; height: 80px; text-align: center; margin-bottom: 20px; font-size: 40px;" class=" my-3 btn btn-primary" href="./index2.html">Jogar</a>`
+            playButton.innerHTML = `<a style="width: 300px; height: 80px; text-align: center; margin-bottom: 20px; font-size: 40px;" class=" my-3 btn btn-primary" href="./index2.html">Jogar</a>`
         }
     else
     if(combinations[2].includes(player1) && combinations[2].includes(player2)){
 
-            playButton.innerHTML = `<a style="width: 500px; margin-left: 600px; height: 80px; text-align: center; margin-bottom: 20px; font-size: 40px;" class=" my-3 btn btn-primary" href="./index3.html">Jogar</a>`
+            playButton.innerHTML = `<a style="width: 300px; height: 80px; text-align: center; margin-bottom: 20px; font-size: 40px;" class=" my-3 btn btn-primary" href="./index3.html">Jogar</a>`
         }  
 
 }
