@@ -42,17 +42,47 @@ function handleSubmit(event,idForm,idVeredict) {
     
     if(combinations[0].includes(player1) && combinations[0].includes(player2)){
 
-            playButton.innerHTML = `<a style="width: 300px; height: 80px; text-align: center; margin-bottom: 20px; font-size: 40px;" class=" my-3 btn btn-primary" href="./index.html">Jogar</a>`
+            playButton.innerHTML = `<a style="width: 300px; height: 80px; text-align: center; margin-bottom: 20px; font-size: 40px;" class=" my-3 btn btn-primary" href="./index1.html?music=${rangeInput.value}&sfx=${rangeInputSF.value}&chr=${rangeInputC.value}">Jogar</a>`
         }
     else
     if(combinations[1].includes(player1) && combinations[1].includes(player2)){
 
-            playButton.innerHTML = `<a style="width: 300px; height: 80px; text-align: center; margin-bottom: 20px; font-size: 40px;" class=" my-3 btn btn-primary" href="./index2.html">Jogar</a>`
+            playButton.innerHTML = `<a style="width: 300px; height: 80px; text-align: center; margin-bottom: 20px; font-size: 40px;" class=" my-3 btn btn-primary" href="./index2.html?music=${rangeInput.value}&sfx=${rangeInputSF.value}&chr=${rangeInputC.value}">Jogar</a>`
         }
     else
     if(combinations[2].includes(player1) && combinations[2].includes(player2)){
 
-            playButton.innerHTML = `<a style="width: 300px; height: 80px; text-align: center; margin-bottom: 20px; font-size: 40px;" class=" my-3 btn btn-primary" href="./index3.html">Jogar</a>`
+            playButton.innerHTML = `<a style="width: 300px; height: 80px; text-align: center; margin-bottom: 20px; font-size: 40px;" class=" my-3 btn btn-primary" href="./index3.html?music=${rangeInput.value}&sfx=${rangeInputSF.value}&chr=${rangeInputC.value}">Jogar</a>`
         }  
 
 }
+const rangeInput = document.getElementById('range');
+const barraPreenchida = document.getElementById('barra');
+const rangeInputSF = document.getElementById('rangeSF');
+const barraPreenchidaSF = document.getElementById('barraSF');
+const rangeInputC = document.getElementById('rangeC');
+const barraPreenchidaC = document.getElementById('barraC');
+const submit = document.getElementById('submit')
+        rangeInput.addEventListener('input', function() {
+            // Calcula a largura em porcentagem com base no valor do seletor (0 a 10)
+            const valor = rangeInput.value;
+            const porcentagem = (valor / 10) * 100;
+            barraPreenchida.style.width = `${porcentagem}%`;
+            handleSubmit(event,'sel1','veredict')
+        });
+        
+        rangeInputSF.addEventListener('input', function() {
+            // Calcula a largura em porcentagem com base no valor do seletor (0 a 10)
+            const valor = rangeInputSF.value;
+            const porcentagem = (valor / 10) * 100;
+            barraPreenchidaSF.style.width = `${porcentagem}%`;
+            handleSubmit(event,'sel1','veredict')
+        });
+
+        rangeInputC.addEventListener('input', function() {
+            // Calcula a largura em porcentagem com base no valor do seletor (0 a 10)
+            const valor = rangeInputC.value;
+            const porcentagem = (valor / 10) * 100;
+            barraPreenchidaC.style.width = `${porcentagem}%`;
+            handleSubmit(event,'sel1','veredict')
+        });

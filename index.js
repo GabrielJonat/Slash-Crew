@@ -46,6 +46,38 @@ let fim = new Audio("./audio/fim.mp3")
 
 let run = new Audio("./audio/run.mp4")
 
+const kelevAudio = [angryBark, kelevJump, dashMiss, kelevDash, kelevLost]
+
+const mikeyAudio = [mikeyJump, mikeyLost]
+
+const music = [inicio, meio, fim]
+
+const effects = [shieldWorking, run, swordHit, spearHit, shielPick]
+
+const params = new URLSearchParams(window.location.search);
+
+mikeyAudio.forEach(element => {
+
+    element.volume = Number(params.get('chr'))/10
+    
+});
+
+kelevAudio.forEach(element => {
+    
+    element.volume =  Number(params.get('chr'))/10
+});
+
+music.forEach((audio) => {
+
+    audio.volume =  Number(params.get('music'))/10
+})
+
+effects.forEach((audio) => {
+
+    audio.volume =  Number(params.get('sfx'))/10
+})
+
+
 let uivou = false
 
 const background = new Sprite({
@@ -1261,7 +1293,7 @@ window.addEventListener('keydown',(event) => {
 
         case 'm':
 
-        enemy.paralyzationDuration = 800
+        enemy.paralyzationDuration = 1000
         enemy.paralyze()
             if(shooting && keys.m.pressed == false){
            

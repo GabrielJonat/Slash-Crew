@@ -60,6 +60,8 @@ let beGone = new Audio("./audio/beGone1.m4a")
 
 let beGone2 = new Audio("./audio/beGone2.m4a")
 
+const params = new URLSearchParams(window.location.search);
+
 const anakAudio = [beGone, beGone2, cochavim, anakLost, getHere, getOverHere, Tauting, AnakWins, AnakWins2, anakLost, AnakHit]
 
 const kelevAudio = [angryBark, kelevJump, dashMiss, kelevDash, kelevLost]
@@ -72,28 +74,27 @@ anakAudio.forEach(element => {
     
     if(element == anakLost){
 
-        element.volumme = 0.8
+        element.volumme = Number(params.get('chr')/10) * 4
     }
     else{
-    element.volume = 0.2
+    element.volume = Number(params.get('chr'))/10
     }
 });
 
 kelevAudio.forEach(element => {
     
-    element.volume = 0.6
+    element.volume =  Number(params.get('chr'))/10
 });
 
 music.forEach((audio) => {
 
-    audio.volume = 0.4
+    audio.volume =  Number(params.get('music'))/10
 })
 
 effects.forEach((audio) => {
 
-    audio.volume = 0.5
+    audio.volume =  Number(params.get('sfx'))/10
 })
-
 
 let uivou = false
 

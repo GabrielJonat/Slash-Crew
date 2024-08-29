@@ -50,9 +50,13 @@ let beGone2 = new Audio("./audio/beGone2.m4a")
 
 let mikeyLost = new Audio("./audio/MikeyLost.wav")
 
+let kung = new Audio("./audio/kung.mp3")
+
+const params = new URLSearchParams(window.location.search);
+
 const anakAudio = [beGone, beGone2, cochavim, anakLost, getHere, getOverHere, Tauting, AnakWins, AnakWins2, anakLost, AnakHit]
 
-const mikeyAudio = [mikeyJump, mikeyLost]
+const mikeyAudio = [mikeyJump, mikeyLost,kung]
 
 const music = [inicio, meio, fim]
 
@@ -62,26 +66,26 @@ anakAudio.forEach(element => {
     
     if(element == anakLost){
 
-        element.volumme = 0.8
+        element.volumme = Number(params.get('chr')/10) * 4
     }
     else{
-    element.volume = 0.2
+    element.volume = Number(params.get('chr'))/10
     }
 });
 
 mikeyAudio.forEach(element => {
     
-    element.volume = 0.6
+    element.volume =  Number(params.get('chr'))/10
 });
 
 music.forEach((audio) => {
 
-    audio.volume = 0.4
+    audio.volume =  Number(params.get('music'))/10
 })
 
 effects.forEach((audio) => {
 
-    audio.volume = 0.5
+    audio.volume =  Number(params.get('sfx'))/10
 })
 
 
@@ -309,7 +313,7 @@ const enemy = new Fighter({
 
     enemy.height = 200
 
-    enemy.moves = [false,false]
+    enemy.moves = [false,false,false]
 
 
 const keys = {
@@ -331,7 +335,10 @@ const keys = {
         pressed: false
 
     },
+    s: {
 
+        pressed: false
+    },
 
     ArrowLeft: {
 
@@ -549,8 +556,6 @@ function defAnimation(){
 
     player.offset = {x: 224, y: 84}
 
-    console.log(playerPulo)
-
     if(keys.m.pressed === true && lastEnemyKey === 'm'){
  
         if( Math.abs(player.position.x - enemy.position.x) >= 100){
@@ -614,6 +619,7 @@ function defAnimation(){
     
                                 enemy.paralyzationDuration = 500
                                 enemy.paralyze()
+                                player.paralyzationDuration = 2000
                                 player.paralyze()
                                 player.velocity.x = -10
                                 if(Math.abs(player.position.x - enemy.position.x) >= 50){
@@ -628,6 +634,7 @@ function defAnimation(){
                                 enemy.paralyze()
                                 while(Math.abs(player.position.x - enemy.position.x) >= 80){
                                 
+                                    player.paralyzationDuration = 2000
                                     player.paralyze()
                                     player.position.x += 0.7
                                     player.position.x -= 0.6
@@ -656,6 +663,20 @@ function defAnimation(){
         player.scale = 3
 
         player.offset = {x: 270, y: 112}
+
+        if(keys.s.pressed){
+
+            keys.a.pressed = false
+            player.paralyzationDuration = 1000
+            player.paralyze()
+            player.attackBox.width = 100
+            player.attack()
+            console.log('s')
+            player.moves[2] = true
+        }
+        else{
+            console.log('n')
+        }
 
         
     }
@@ -849,7 +870,7 @@ function defAnimation(){
 
         AttackRampage = false
 
-    if (keys.e.pressed && keys.a.pressed == false && keys.d.pressed == false && player.velocity.y == 0 && AttackRampage == false){
+    if (keys.e.pressed && lastPlayerKey == 'e' && !enemy.moves[2] && keys.a.pressed == false && keys.d.pressed == false && player.velocity.y == 0 && AttackRampage == false){
 
         player.attack()
 
@@ -878,20 +899,12 @@ function defAnimation(){
 
     if(player.isParalyzed){
 
-        if(player.position.x + player.height < canvas.height - 100){
-
-            player.img = player.sprites.jump.img
-        }
-        else{
         player.img = player.sprites.paralyze.img
 
         player.offset = {x: 170, y: 50}
         player.framesMax = 22
 
         player.scale = 1.8
-
-        }
-
     }
 
 
@@ -1037,12 +1050,27 @@ function defAnimation(){
             if (player.position.x + player.attackBox.width >= enemy.position.x && enemy.position.y + enemy.height > player.position.y)
             {
 
-                if(player.isAttacking){
+                if(player.isAttacking && player.moves[2]){
 
                     swordHit.play();
                 
-                    enemy.health -= 0.3   
+                    enemy.health -= 2
+                    
+                    enemy.velocity.x = 70
+
+                    audioTest(kung, mikeyAudio)
+
+                    setTimeout(() => {
+
+                        kung.pause()
+                    },2300)
                 
+            } else if(player.isAttacking){
+
+                swordHit.play();
+            
+                enemy.health -= 0.3   
+            
             }
 
                 document.querySelector('#enemy-health').style.width = enemy.health + '%'
@@ -1202,6 +1230,10 @@ window.addEventListener('keydown',(event) => {
             }
 
             break
+        
+            case 's':
+                keys.s.pressed = true
+                break
 
         case 'e':
 
@@ -1247,6 +1279,9 @@ window.addEventListener('keyup',(event) => {
             keys.a.pressed = false
             
             break
+
+        case 's':
+            keys.s.pressed = false
 
 
        /* case 'w':
@@ -1346,7 +1381,7 @@ window.addEventListener('keydown',(event) => {
         setTimeout(() => {
             
             enemy.framesCurrent = 0
-            timer % 2 == 0? audio = getHere : audio = get
+            timer % 2 == 0? audio = getHere : audio = getOverHere
             audio.play()
             keys.m.pressed = true
             lastEnemyKey = 'm'

@@ -37,7 +37,7 @@
         
     </div>
 
-    <div class="row my-5" id="play" style="justify-content: center;"><a style="width: 300px; height: 80px; text-align: center; margin-bottom: 20px; font-size: 40px;" class=" my-3 btn btn-primary" href="./index1.html">Jogar</a>
+    <div class="row my-5" id="play" style="justify-content: center;"><a style="width: 300px; height: 80px; text-align: center; margin-bottom: 20px; font-size: 40px;" class=" my-3 btn btn-primary" href="./index1.html?music=4&sfx=5&chr=5">Jogar</a>
     </div>
     <div class="row my-5" style="justify-content: center;">
         
@@ -62,7 +62,7 @@
                                     <option>Kelev</option>
                                     <option>Michael the Duck</option>
                                   </select>
-                                  <button class="btn btn-primary mt-3 text-warning" onclick="handleSubmit(event,'sel1','veredict')">Submit</button>
+                                  <button class="btn btn-primary mt-3 text-warning" onclick="handleSubmit(event,'sel1','veredict')" id="Submit">Submit</button>
                                 </form>
                               </div>
 
@@ -101,6 +101,54 @@
                             <img src="./images/Kelev_defeat.png" alt="">
                         </div>
 
+                    </div>
+                    
+                </div>
+
+                <div class="row my-5" id="error">
+
+                </div>
+                </div>
+                
+        </div>
+
+        <div class="card bg-info border-dark my-5" style="width: 1024px;">
+
+            <div class="card-body">
+
+                <div class="row">
+
+                    <h1 class="my-3 text-primary" style="text-align: center; font-weight: bold;">Sound Settings:</h1>
+                    <div class="col border-dark" style="margin-left: 150px;">
+                    
+                        <h2 style="margin-top: 1em;">Music:</h2>
+                        <h2 style="margin-top: 1em;">Sound Effects:</h2>
+                        <h2 style="margin-top: 1em;">Characters:</h2>
+    
+                        
+                        
+                    </div>
+                    
+                    <div class="col border-dark">
+                    
+                        <input type="range" id="range" class="range-input" min="0" max="10" value="4" step="1" style="width: 100%; margin-top: 3em; appearance: none; background: linear-gradient(to right, darkgreen,#4caf50,yellow, orange, rgb(203, 80, 80)) no-repeat;">
+
+                        <div style=" width: 100%; height: 30px; background-color: #e0e0e0; border-radius: 5px; overflow: hidden; box-shadow: inset 0 0 5px #000000; margin-top: -2em;">
+                            <div id="barra" style="width: 40%;  height: 100%; background-color: grey;  transition: width 0.3s ease; border-radius: 5px 0 0 5px;"></div>
+                        </div>
+
+                        <input type="range" id="rangeSF" class="range-input" min="0" max="10" value="5" step="1" style="width: 100%; margin-top: 3em; appearance: none; background: linear-gradient(to right, darkgreen,#4caf50,yellow, orange, rgb(203, 80, 80)) no-repeat;">
+
+                        <div style=" width: 100%; height: 30px; background-color: #e0e0e0; border-radius: 5px; overflow: hidden; box-shadow: inset 0 0 5px #000000; margin-top: -2em;">
+                            <div id="barraSF" style="width: 50%;  height: 100%; background-color: grey;  transition: width 0.3s ease; border-radius: 5px 0 0 5px;"></div>
+                        </div>
+
+                        <input type="range" id="rangeC" class="range-input" min="0" max="10" value="5" step="1" style="width: 100%; margin-top: 3em; appearance: none; background: linear-gradient(to right, darkgreen,  #4caf50,yellow, orange, rgb(203, 80, 80)) no-repeat;">
+
+                        <div style=" width: 100%; height: 30px; background-color: #e0e0e0; border-radius: 5px; overflow: hidden; box-shadow: inset 0 0 5px #000000; margin-top: -2em;">
+                            <div id="barraC" style="width: 50%;  height: 100%; background-color: grey;  transition: width 0.3s ease; border-radius: 5px 0 0 5px;"></div>
+                        </div>
+                        
                     </div>
                     
                 </div>
