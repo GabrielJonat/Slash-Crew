@@ -119,7 +119,7 @@ class Projectile extends Sprite{
 
         move(){
 
-            this.velocity.x = -24
+            this.velocity.x = -30
     
         }
     
