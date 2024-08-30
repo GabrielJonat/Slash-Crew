@@ -313,8 +313,7 @@ const enemy = new Fighter({
 
     enemy.height = 200
 
-    enemy.moves = [false,false,false]
-
+    enemy.moves = [false,false,false,false]
 
 const keys = {
 
@@ -664,20 +663,25 @@ function defAnimation(){
 
         player.offset = {x: 270, y: 112}
 
-        if(keys.s.pressed){
+        if(keys.s.pressed && player.attackBox.width > 0 && !playerPulo){
 
             keys.a.pressed = false
             player.paralyzationDuration = 1000
             player.paralyze()
-            player.attackBox.width = 100
+            enemy.paralyzationDuration = 700
+            keys.ArrowLeft.pressed = false
+            keys.ArrowDown.pressed = false
+            keys.ArrowUp.pressed = false
+            keys.ArrowRight.pressed = false
+            keys.n.pressed = false
+            keys.m.pressed = false
+            enemy.paralyze()
             player.attack()
-            console.log('s')
             player.moves[2] = true
+            setTimeout(() => {
+                player.moves[2] = false
+            }, 1000)
         }
-        else{
-            console.log('n')
-        }
-
         
     }
 
@@ -701,7 +705,7 @@ function defAnimation(){
 
             player.offset = {x: 270, y: 112}
 
-        
+            player.moves[3] = false
         }
     }
 
@@ -820,6 +824,68 @@ function defAnimation(){
         player.scale = 1.6
     
         player.offset = {x: 140, y: 40}
+        
+        if(keys.s.pressed && player.moves[3] == false){
+
+            player.velocity.y = 30
+            if(Math.abs(player.position.x - enemy.position.x) <= 210 && !enemyPulo){
+                if(player.attackBox.width > 0){
+
+                    if(canvas.width - player.position.x  > 90 && canvas.width - enemy.position.x  > 90 ){
+
+                        player.velocity.x = 20
+                        enemy.velocity.x = 20
+                        enemy.health -= 2.1
+                        document.querySelector('#enemy-health').style.width = enemy.health + '%'
+                        player.paralyzationDuration = 600
+                        player.paralyze()
+                    }
+                }
+                else{
+                    
+                    if(player.position.x > 20 && enemy.position.x > 20){
+    
+                        player.velocity.x = -20
+                        enemy.velocity.x = -20
+                        enemy.health -= 2.1
+                        document.querySelector('#enemy-health').style.width = enemy.health + '%'
+                        player.paralyzationDuration = 600
+                        player.paralyze()
+                    }
+                }
+        }
+        else{
+
+            if(player.attackBox.width > 0){
+
+                if(canvas.width - player.position.x  > 90 && canvas.width - enemy.position.x  > 80){
+
+                    if(enemyPulo && Math.abs(player.position.x - enemy.position.x) <= 210){
+                        enemy.velocity.x = 10
+                    }
+                    player.velocity.x = 20
+                    player.paralyzationDuration = 2000
+                    player.paralyze()
+                }
+            }
+            else{
+                
+                if(player.position.x > 20 && enemy.position.x > 10){
+
+                    if(enemyPulo && Math.abs(player.position.x - enemy.position.x) <= 210){
+                        enemy.velocity.x = -10
+                    }
+                    player.velocity.x = -20
+                    player.paralyzationDuration = 2000
+                    player.paralyze()
+                }
+            }
+        }
+
+        }
+        else{
+            console.log(player.moves[3], keys.s.pressed)
+        }
        
     }
 
@@ -894,6 +960,18 @@ function defAnimation(){
         
 
         player.framesMax = 4
+
+        if(keys.s.pressed){
+
+            player.moves[3] = true
+            player.attack()
+            player.velocity.y = -24
+            keys.e.pressed = false
+            setTimeout(() => {
+
+                player.moves[3] = false
+            }, 1000)
+        }
 
     }
 
@@ -1055,8 +1133,11 @@ function defAnimation(){
                     swordHit.play();
                 
                     enemy.health -= 2
+
+                    if(canvas.width - enemy.position.x > 100){
                     
-                    enemy.velocity.x = 70
+                        enemy.velocity.x = 70
+                    }
 
                     audioTest(kung, mikeyAudio)
 
@@ -1065,7 +1146,27 @@ function defAnimation(){
                         kung.pause()
                     },2300)
                 
-            } else if(player.isAttacking){
+            } 
+            
+            else if(player.isAttacking && player.moves[3]){
+            
+                enemy.health -= 4.3
+
+                audioTest(kung, mikeyAudio)
+
+                setTimeout(() => {
+
+                    swordHit.play();
+                },1000)
+
+                setTimeout(() => {
+
+                    kung.pause()
+            
+                },2300)
+        
+        }
+            else if(player.isAttacking){
 
                 swordHit.play();
             
