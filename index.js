@@ -219,6 +219,7 @@ const player = new Fighter({
 
 }, 120, 100)
 
+
 const enemy = new Fighter({
 
     position: { x: 821, y: 100},
@@ -342,7 +343,11 @@ const keys = {
         pressed: false
 
     },
+    ArrowDown: {
 
+        pressed: false
+
+    },
    e: {
 
         pressed: false
@@ -638,7 +643,25 @@ function defAnimation(){
             x: 285,
             y: 130
         }
+        if(keys.ArrowDown.pressed && player.attackBox.width > 0 && !playerPulo){
 
+            keys.a.pressed = false
+            enemy.paralyzationDuration = 1000
+            enemy.paralyze()
+            player.paralyzationDuration = 700
+            keys.a.pressed = false
+            keys.s.pressed = false
+            keys.w.pressed = false
+            keys.d.pressed = false
+            keys.e.pressed = false
+            keys.q.pressed = false
+            player.paralyze()
+            enemy.attack()
+            enemy.moves[2] = true
+            setTimeout(() => {
+                enemy.moves[2] = false
+            }, 1000)
+        }
 
     }
     
@@ -913,6 +936,18 @@ Math
         enemy.scale = enemy.sprites.thrust.scale
 
         enemy.offset = {x:190, y: 57}
+        if(keys.ArrowDown.pressed){
+
+            enemy.moves[3] = true
+            enemy.attack()
+            enemy.velocity.y = -24
+            keys.n.pressed = false
+            setTimeout(() => {
+
+                enemy.moves[3] = false
+            }, 1000)
+        }
+
 
 
     }
@@ -1336,6 +1371,12 @@ window.addEventListener('keyup',(event) => {
         case 'ArrowUp':
 
             keys.ArrowUp.pressed = false
+            
+            break
+
+        case 'ArrowDown':
+
+            keys.ArrowDown.pressed = false
             
             break
 
