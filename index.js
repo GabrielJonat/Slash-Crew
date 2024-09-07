@@ -52,7 +52,7 @@ const mikeyAudio = [mikeyJump, mikeyLost]
 
 const music = [inicio, meio, fim]
 
-const effects = [shieldWorking, run, swordHit, spearHit, shielPick]
+const effects = [shieldWorking, run, swordHit, spearHit, shielPick,whistleSound,hitSound]
 
 const params = new URLSearchParams(window.location.search);
 
@@ -716,6 +716,35 @@ function defAnimation(){
         enemy.scale = 1.8
     
         enemy.offset = {x: 150, y: 50}
+        if(keys.ArrowDown.pressed){
+
+            enemy.velocity.y = 30
+            if(Math.abs(enemy.position.x - player.position.x) <= 210 && !enemyPulo){
+                if(enemy.attackBox.width > 0){
+
+                    if(canvas.width - enemy.position.x  > 90 && canvas.width - player.position.x  > 90 ){
+
+                        enemy.velocity.x = 20
+                        player.velocity.x = 20
+                        player.health -= 2.1
+                        enemy.paralyzationDuration = 600
+                        enemy.paralyze()
+                    }
+                }
+                else{
+                    
+                    if(enemy.position.x > 20 && player.position.x > 20){
+    
+                        enemy.velocity.x = -20
+                        player.velocity.x = -20
+                        player.health -= 2.1
+                        enemy.paralyzationDuration = 600
+                        enemy.paralyze()
+                    }
+                }
+            }
+        document.querySelector('#player-health').style.width = player.health + '%'
+        }
     }
 
     if(player.position.y + player.height < canvas.height - 100 && player.velocity.y != 0 && !upon){
@@ -938,7 +967,6 @@ Math
         enemy.offset = {x:190, y: 57}
         if(keys.ArrowDown.pressed){
 
-            enemy.moves[3] = true
             enemy.attack()
             enemy.velocity.y = -24
             keys.n.pressed = false
@@ -1310,6 +1338,15 @@ window.addEventListener('keydown',(event) => {
 
             break
 
+            case 'ArrowDown':
+
+            if(! enemy.isDead){
+
+                keys.ArrowDown.pressed = true
+
+            }
+
+            break
 
         case 'n':
 
